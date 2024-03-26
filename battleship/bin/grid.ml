@@ -6,6 +6,8 @@
    only see x's, o's, and double xx's *)
 
 (*Prompt user to input a size for the game board, and return this size*)
+let spacing = "  "
+
 let rec begin_game () =
   let () =
     print_string
@@ -36,20 +38,25 @@ let rec print_list lst : unit =
       let () = print_string " " in
       print_list t
 
-(** Print the grid [lst]. Requires 5 <= len(lst) <= 26*)
-let rec print_grid lst : unit =
+(** Print the grid [lst]. Requires 5 <= len(lst) <= 26. [rowNum] keeps track of
+    what row we are printing on, and it starts at 1. *)
+let rec print_grid lst (rowNum : int) : unit =
   match lst with
   | [] -> print_string ""
   | h :: t ->
       let () = print_list h in
-      let () = print_string "\n" in
-      let () = print_grid t in
+      let () = print_string (string_of_int rowNum ^ "\n") in
+      let () = print_grid t (rowNum + 1) in
       ()
 
 (** Print the grid [lst] with headers A-Z and 1-26. Requires 5 <= len(lst) <= 26*)
-let print_board lst = failwith
-
-exception NeedToImplement
+let print_board lst =
+  List.iter print_string
+    (List.map
+       (fun x -> String.make 1 x ^ spacing)
+       (List.init (List.length lst) (fun x -> Char.chr (x + 65))));
+  print_endline "";
+  print_grid lst 1
 
 (** Print the current player's grid [lst] with headers A-Z and 1-26. Requires 5
     <= len(lst) <= 26 Display all information (ships, water, hit attempts,
