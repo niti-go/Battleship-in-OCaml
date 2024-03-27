@@ -6,6 +6,10 @@
    only see x's, o's, and double xx's *)
 
 (*Prompt user to input a size for the game board, and return this size*)
+
+(*Instructions to get emoji library Run opam update Run opam upgrade run opam
+  install emoji.1.1.0 *)
+
 let spacing = "  "
 
 let rec begin_game () =
@@ -14,7 +18,7 @@ let rec begin_game () =
       "Welcome to Battleship!\nEnter the grid size (between 5 and 20): "
   in
   let size = int_of_string (read_line ()) in
-  if not (5 < size && size < 26) then begin
+  if not (5 <= size && size <= 26) then begin
     let () = print_string "\nThis is not a valid size." in
     begin_game ()
   end
@@ -66,7 +70,12 @@ let print_my_board lst = failwith
 exception NeedToImplement
 
 (** Print the opponent's grid [lst] with headers A-Z and 1-26. Requires 5 <=
-    len(lst) <= 26 Display only miss attempts, ship hits, fully sunken ships*)
-let print_their_board lst = failwith
-
-exception NeedToImplement
+    len(lst) <= 26 Display only miss attempts (wx), ship hits (sx), fully sunken
+    ships (sxx)*)
+let print_their_board lst =
+  let tmp_lst =
+    List.map
+      (List.map (fun x -> if x = "wx" || x = "sx" || x = "sxx" then x else "."))
+      lst
+  in
+  print_board tmp_lst
