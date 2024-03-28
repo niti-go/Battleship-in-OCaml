@@ -10,27 +10,31 @@
 (*Instructions to get emoji library Run opam update Run opam upgrade run opam
   install emoji.1.1.0 *)
 
+(**AF: The battleship grid is represented as a string list list. So row 1 of the
+   grid is the first list in the list, and so on. The coordinates on the grid
+   will be the row and column in the string list list. *)
+
+(**RI: The grid size should not change, and it should always be square. *)
+
 let spacing = "  "
 
 let rec begin_game () =
   let () =
     print_string
-      "Welcome to Battleship!\nEnter the grid size (between 5 and 20): "
+      "Welcome to Battleship!\nEnter the grid size (between 5 and 26): "
   in
   let size = int_of_string (read_line ()) in
   if not (5 <= size && size <= 26) then begin
-    let () = print_string "\nThis is not a valid size." in
+    let () = print_string "\nThis is not a valid size. " in
     begin_game ()
   end
   else size
 
 let size = begin_game ()
 
-(** Helper function *)
-let create_list size : string list = List.init size (fun x -> "wo")
-
-(** Create an initial board of [size] by [size] dimension without any ships*)
 let create_board size : string list list =
+  (* Helper function *)
+  let create_list size : string list = List.init size (fun x -> "wo") in
   List.init size (fun x -> create_list size)
 
 (** Helper function*)
@@ -42,8 +46,6 @@ let rec print_list lst : unit =
       let () = print_string " " in
       print_list t
 
-(** Print the grid [lst]. Requires 5 <= len(lst) <= 26. [rowNum] keeps track of
-    what row we are printing on, and it starts at 1. *)
 let rec print_grid lst (rowNum : int) : unit =
   match lst with
   | [] -> print_string ""
@@ -53,7 +55,6 @@ let rec print_grid lst (rowNum : int) : unit =
       let () = print_grid t (rowNum + 1) in
       ()
 
-(** Print the grid [lst] with headers A-Z and 1-26. Requires 5 <= len(lst) <= 26*)
 let print_board lst =
   List.iter print_string
     (List.map
@@ -62,16 +63,8 @@ let print_board lst =
   print_endline "";
   print_grid lst 1
 
-(** Print the current player's grid [lst] with headers A-Z and 1-26. Requires 5
-    <= len(lst) <= 26 Display all information (ships, water, hit attempts,
-    sunken ships)*)
-let print_my_board lst = failwith
+let print_my_board lst = print_board lst
 
-exception NeedToImplement
-
-(** Print the opponent's grid [lst] with headers A-Z and 1-26. Requires 5 <=
-    len(lst) <= 26 Display only miss attempts (wx), ship hits (sx), fully sunken
-    ships (sxx)*)
 let print_their_board lst =
   let tmp_lst =
     List.map
