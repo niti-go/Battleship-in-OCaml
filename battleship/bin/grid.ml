@@ -46,11 +46,48 @@ let rec print_list lst : unit =
       let () = print_string " " in
       print_list t
 
+let rec print_colored_list lst =
+  match lst with
+  | [] -> print_string ""
+  | h :: t ->
+      if h = "wo" then
+        let () =
+          ANSITerminal.print_string
+            [ ANSITerminal.blue; ANSITerminal.on_default ]
+            (h ^ " ")
+        in
+        print_colored_list t
+      else if h = "wx" then
+        let () =
+          ANSITerminal.print_string
+            [ ANSITerminal.cyan; ANSITerminal.on_default ]
+            (h ^ " ")
+        in
+        print_colored_list t
+      else if h = "sx" then
+        let () =
+          ANSITerminal.print_string
+            [ ANSITerminal.magenta; ANSITerminal.on_default ]
+            (h ^ " ")
+        in
+        print_colored_list t
+      else if h = "ssx" then
+        let () =
+          ANSITerminal.print_string
+            [ ANSITerminal.red; ANSITerminal.on_default ]
+            (h ^ " ")
+        in
+        print_colored_list t
+      else
+        let () = print_string h in
+        let () = print_string " " in
+        print_colored_list t
+
 let rec print_grid lst (rowNum : int) : unit =
   match lst with
   | [] -> print_string ""
   | h :: t ->
-      let () = print_list h in
+      let () = print_colored_list h in
       let () = print_string (string_of_int rowNum ^ "\n") in
       let () = print_grid t (rowNum + 1) in
       ()
@@ -72,3 +109,6 @@ let print_their_board lst =
       lst
   in
   print_board tmp_lst
+
+(* ANSITerminal.print_string [ ANSITerminal.green; ANSITerminal.on_default ]
+   (String.make 1 guess_word.[index]) *)
