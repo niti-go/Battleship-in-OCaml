@@ -1,0 +1,112 @@
+commit 3ccbdfbcdf790f286a9cc3a4c396c072c609865f
+Author: ns848 <ns848@cornell.edu>
+Date:   Thu Mar 28 13:45:13 2024 -0400
+
+    prints out colors on boards
+
+commit 96f78b98890284f06e2e41c1f84725b1242c7774
+Author: NIDHI2023 <nidhisoma@gmail.com>
+Date:   Wed Mar 27 22:09:41 2024 -0400
+
+    Update documentation comments
+    
+    -added grid.mli file
+    -added draft for AF and RI
+
+commit fbe303268984b7c5af5ba397b69ca385491226a0
+Author: ns848 <ns848@cornell.edu>
+Date:   Wed Mar 27 00:27:39 2024 -0400
+
+    implement board for other person
+
+commit 31db028283a9b44471cd0fe0c036c4004de7a45c
+Author: ns848 <ns848@cornell.edu>
+Date:   Tue Mar 26 12:58:11 2024 -0400
+
+    implement print board function
+
+commit 2b051da0727557a89d3d6cf42459598b3d2ad392
+Author: Niti Goyal <ng459@cornell.edu>
+Date:   Tue Mar 26 12:02:51 2024 -0400
+
+    Create grid.ml file
+    - Initialize game board
+    - Prompt user for size
+
+commit 93d9657fe8e13efe559dfa2deb850bfbd5f2691a
+Author: ns848 <ns848@cornell.edu>
+Date:   Mon Mar 25 23:05:42 2024 -0400
+
+    initialized project
+
+commit 4d556e62e6af954904d1771103ef24ea3b416744
+Merge: a4a0006 a22e41a
+Author: ns848 <ns848@cornell.edu>
+Date:   Sun Mar 24 19:31:51 2024 -0400
+
+    Merge pull request #2 from nm563/gingerbranch
+    
+    added YAML file
+
+commit a22e41ad8b63a6821b9cf97654477f8c5919c876
+Author: Ginger McCoy <gmm225@cornell.edu>
+Date:   Sun Mar 24 19:30:18 2024 -0400
+
+    added yaml file
+
+commit 579b276cf47b9da14a40c5e9c948028e4440f21c
+Merge: 47b821b a4a0006
+Author: ns848 <ns848@cornell.edu>
+Date:   Sun Mar 24 19:18:22 2024 -0400
+
+    Merge pull request #1 from nm563/main
+    
+    ReadMe changes
+
+commit a4a000612e4c91d6e1bcc8a12ee24f7d9908ea7b
+Author: Niti Goyal <ng459@cornell.edu>
+Date:   Sun Mar 24 19:13:14 2024 -0400
+
+    Separate contributor names
+
+commit 3f99984c619446d985de35e0831777e402451d18
+Author: ns848 <ns848@cornell.edu>
+Date:   Sun Mar 24 19:11:19 2024 -0400
+
+    Update README.md
+
+commit 38e087216c5726f0cc769757e572af3082961c11
+Author: ns848 <ns848@cornell.edu>
+Date:   Sun Mar 24 19:09:43 2024 -0400
+
+    Change title name in README
+
+commit 47b821be5a3252b8992785f8aab9f4ef8b6ecfbd
+Author: Ginger McCoy <gmm225@cornell.edu>
+Date:   Sun Mar 24 18:06:32 2024 -0400
+
+    edited contributors
+
+commit bc2b428091cbbe38cf2decb9234cedcdc2cea08f
+Author: Ginger McCoy <gmm225@cornell.edu>
+Date:   Fri Mar 8 16:03:06 2024 -0500
+
+    Ginger added name
+
+commit b75cb2fd6c24487c436685cf04570f8276018f39
+Author: jw2446 <14737+jw2446@users.noreply.github.coecis.cornell.edu>
+Date:   Thu Mar 7 14:54:17 2024 -0500
+
+    Added name to README.md
+
+commit fa8c23fc6bfdc16ce137803be8fa0071f52b525c
+Author: nm563 <nm563@cornell.edu>
+Date:   Wed Feb 28 21:53:55 2024 -0500
+
+    Update README.md
+
+commit 85bc628c344817671a7172662f0ae0b90a95abe8
+Author: nm563 <nm563@cornell.edu>
+Date:   Wed Feb 28 21:35:59 2024 -0500
+
+    Initial commit

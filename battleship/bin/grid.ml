@@ -71,7 +71,7 @@ let rec print_colored_list lst =
             (h ^ " ")
         in
         print_colored_list t
-      else if h = "ssx" then
+      else if h = "sxx" then
         let () =
           ANSITerminal.print_string
             [ ANSITerminal.red; ANSITerminal.on_default ]
@@ -105,7 +105,7 @@ let print_my_board lst = print_board lst
 let print_their_board lst =
   let tmp_lst =
     List.map
-      (List.map (fun x -> if x = "wx" || x = "sx" || x = "sxx" then x else "."))
+      (List.map (fun x -> if x = "wx" || x = "sx" || x = "sxx" then x else ". "))
       lst
   in
   print_board tmp_lst
