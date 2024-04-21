@@ -1,5 +1,7 @@
 (library
  (inline_tests)
  (name battleship)
+ (libraries ANSITerminal)
+ (modules grid)
  (preprocess
   (pps ppx_inline_test)))
