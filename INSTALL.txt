@@ -13,7 +13,7 @@ This loads the program into the topline and allows you to utilize various functi
 
 To load the program into utop, enter the following:
 
-#use “bin/grid.ml”;;
+#use “bin/main.ml”;;
 
 To exit utop, enter:
 #quit;;
@@ -21,24 +21,3 @@ To exit utop, enter:
 Entering a Size
 
 Once the program is loaded, you will be prompted to enter the dimensions of the board you wish to play with. Enter an integer between 5 and 26 and hit enter. 
-
-Creating a Board
-
-To create a board with only water and no ships of dimension [size], enter:
-
-let my_board = create_board size;;
-
-where [size] is between 5 and 26. 
-
-Printing the Board 
-To get color, for now you will have to supply a list of your own. It recognizes the exact strings “so, sx, sxx, wo, wx”.
-
-Printing As If It Is Your Board
-
-Enter:
-
-let () = print_my_board my_board;;
-
-Printing the Board As If It Is The Opponent’s Board:
-Enter:
-let () = print_their_board my_board;;
