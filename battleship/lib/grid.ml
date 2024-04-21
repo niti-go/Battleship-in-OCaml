@@ -62,3 +62,15 @@ let print_grid grid =
       (* Print each cell with color and spacing *)
       ANSITerminal.print_string [ ANSITerminal.on_default ] "\n")
 (* New line for each row *)
+
+(* Additional function to print the opponent's view of the board *)
+let print_their_board board =
+  let masked_board =
+    List.map
+      (List.map (fun cell ->
+           match cell with
+           | "wx" | "sx" | "sxx" -> cell (* Misses and hits remain visible *)
+           | _ -> "." (* Hide water and ships not hit *)))
+      board
+  in
+  print_grid [] masked_board (* Reuse print_grid function *)

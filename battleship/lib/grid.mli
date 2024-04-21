@@ -13,3 +13,5 @@ val create_board : int -> string list list
 
 val print_grid : 'a list -> string list list -> unit
 (** Print a grid to the console with color coding for different cell states *)
+
+val print_their_board : string list list -> unit
