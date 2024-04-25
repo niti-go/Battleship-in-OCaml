@@ -81,12 +81,33 @@ let print_their_board board =
   in
   print_grid [] masked_board (* Reuse print_grid function *)
 
-let size = 10 (* Example default size; adjust as needed *)
+let size =
+  10 (* **IS THIS SUPPOSED TO BE BOARD OR SHIP SIZE-- why neccessary??? *)
 
 let coordinates str =
-  ( int_of_char (String.get str 0) - int_of_char 'a',
-    int_of_string (String.sub str 1 (String.length str - 1)) - 1 )
-(* Converts a board coordinate like 'a1' into a tuple (0,0) *)
+  let col = String.get str 0 in
+  (* This gets the letter *)
+  let row = String.sub str 1 (String.length str - 1) in
+
+  (* This gets the number *)
+
+  (* Convert the column letter to a zero-based index: Subtract the ASCII value
+     of 'A' from the ASCII value of the letter to get 0 for 'A', 1 for 'B',
+     etc. *)
+  let x = int_of_char col - int_of_char 'A' in
+
+  (* Convert the row string to an integer and adjust it to be zero-based:
+     Subtract 1 from the integer value of the row string ('2' becomes 1, '1'
+     becomes 0, etc.). *)
+  let y = int_of_string row - 1 in
+
+  (y, x)
+(* Return the coordinates as (y, x) to match the grid's row and column
+   indexing *)
+
+(*Function takes a coordinate string like 'B2' and returns (1, 1), where 'B' is
+  the second column and '2' is the second row, typical zero-based indexing in
+  programming. *)
 
 let num_ships_sunk = ref 0 (* Tracks the number of sunk ships *)
 
