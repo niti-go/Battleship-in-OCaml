@@ -10,15 +10,21 @@
 type cell =
   | Water
   | Miss
-  | Ship
-  | Hit
+  | Ship of {
+      id : int;
+      length : int;
+    }
+  | Hit of {
+      id : int;
+      length : int;
+    }
   | Destroyed
 
 let string_of_cell = function
   | Water -> "wo"
   | Miss -> "wx"
-  | Ship -> "so"
-  | Hit -> "sx"
+  | Ship _ -> "so" (* Ignoring id and length *)
+  | Hit _ -> "sx" (* Ignoring id and length *)
   | Destroyed -> "sxx"
 
 let create_board size =
@@ -74,3 +80,41 @@ let print_their_board board =
       board
   in
   print_grid [] masked_board (* Reuse print_grid function *)
+
+let size = 10 (* Example default size; adjust as needed *)
+
+let coordinates str =
+  ( int_of_char (String.get str 0) - int_of_char 'a',
+    int_of_string (String.sub str 1 (String.length str - 1)) - 1 )
+(* Converts a board coordinate like 'a1' into a tuple (0,0) *)
+
+let num_ships_sunk = ref 0 (* Tracks the number of sunk ships *)
+
+let get_ships size =
+  match size with
+  | 5 ->
+      [ 2; 3 ] (* Example: For a 5x5 board, return two ships of sizes 2 and 3 *)
+  | _ -> [ 2; 3; 4; 5 ]
+(* Default case for larger boards *)
+
+let validate_ship length coord grid = true
+(* Placeholder that always validates ship placement. Implement actual logic
+   later. *)
+
+let hit_ship coord grid = [ "dummy" ]
+(* Placeholder returning a dummy list. Implement actual logic later. *)
+
+let is_sunk ship_id grid = false
+(* Placeholder that assumes ships are not sunk. Implement actual logic later. *)
+
+let change_state state index = ()
+(* Placeholder function that does nothing. Implement actual state changing logic
+   later. *)
+
+let change_to_ship ship_id index = ()
+(* Placeholder function that does nothing. Implement ship placement logic
+   later. *)
+
+let set_ships ship_lengths grid = ()
+(* Placeholder function that does nothing. Implement ship setting logic
+   later. *)
