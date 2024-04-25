@@ -32,7 +32,7 @@ val num_ships_sunk : int ref
 val create_board : int -> string list list
 (** Create a battleship grid of a given size with all cells initialized to Water *)
 
-val print_grid : 'a list -> string list list -> unit
+val print_grid : string list list -> unit
 (** Print a grid to the console with color coding for different cell states *)
 
 val print_their_board : string list list -> unit

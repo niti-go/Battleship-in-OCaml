@@ -11,7 +11,7 @@ let rec main_loop board =
       (* Print the opponent's view of the board *)
       main_loop board (* Continue the loop *)
   | "show" ->
-      print_grid [] board;
+      print_grid board;
       (* Print the player's board *)
       main_loop board
   | "exit" ->

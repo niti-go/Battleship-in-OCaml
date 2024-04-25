@@ -46,9 +46,8 @@ let print_grid grid =
     ANSITerminal.print_string [ ANSITerminal.on_default ] "\n"
     (* Move to the next line after headers *)
   in
-  print_header (List.length grid);
-  (* Call to print the column headers *)
-  List.iteri (fun i row ->
+  List.iteri
+    (fun i row ->
       ANSITerminal.print_string
         [ ANSITerminal.on_default ]
         (string_of_int (i + 1) ^ "  ");
@@ -67,7 +66,10 @@ let print_grid grid =
         row;
       (* Print each cell with color and spacing *)
       ANSITerminal.print_string [ ANSITerminal.on_default ] "\n")
-(* New line for each row *)
+    grid;
+  (* New line for each row *)
+  print_header (List.length grid)
+(* Call to print the column headers at the bottom *)
 
 (* Additional function to print the opponent's view of the board *)
 let print_their_board board =
@@ -79,7 +81,7 @@ let print_their_board board =
            | _ -> "." (* Hide water and ships not hit *)))
       board
   in
-  print_grid [] masked_board (* Reuse print_grid function *)
+  print_grid masked_board (* Reuse print_grid function *)
 
 let size =
   10 (* **IS THIS SUPPOSED TO BE BOARD OR SHIP SIZE-- why neccessary??? *)
