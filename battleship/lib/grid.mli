@@ -3,20 +3,8 @@
 (* ToDo 1: create type for grid *)
 (*type t = cell array array*)
 
+type cell
 (** Type representing the different possible states of a cell in the game grid *)
-type cell =
-  | Water
-  | Miss
-  | Ship of {
-      id : int;
-      length : int;
-    }
-  | Hit of {
-      id : int;
-      length : int;
-    }
-  | Destroyed
-(* destroyed = sunk *)
 
 val size : int
 
@@ -37,9 +25,8 @@ val print_grid : string list list -> unit
 
 val print_their_board : string list list -> unit
 
-(* ToDo 2: Take in the size of the board and using the size hard code the
-   boundaries (use gc board pic and own judgement) return the length of the
-   ships that the user must place. *)
+(* Takes in the size of the board and determines a list of ships that the user
+   must place and what lengths they should be. *)
 val get_ships : int -> int list
 
 (* ToDo 3: take in the two coordinates, the length of the ship, and the grid and

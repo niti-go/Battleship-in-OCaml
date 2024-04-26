@@ -18,7 +18,7 @@ type cell =
       id : int;
       length : int;
     }
-  | Destroyed
+  | Destroyed (* destroyed = sunk *)
 
 let string_of_cell = function
   | Water -> "wo"
@@ -40,7 +40,7 @@ let print_grid grid =
     for i = 0 to size - 1 do
       let letter = Char.chr (65 + i) |> String.make 1 in
       (* Convert integer to A, B, C, etc. *)
-      ANSITerminal.print_string [ ANSITerminal.on_default ] (letter ^ "  ")
+      ANSITerminal.print_string [ ANSITerminal.on_default ] (letter ^ "   ")
       (* Append two spaces for spacing *)
     done;
     ANSITerminal.print_string [ ANSITerminal.on_default ] "\n"
@@ -83,6 +83,7 @@ let print_their_board board =
   in
   print_grid masked_board (* Reuse print_grid function *)
 
+(*Anyone have any idea what this func is for??*)
 let size =
   10 (* **IS THIS SUPPOSED TO BE BOARD OR SHIP SIZE-- why neccessary??? *)
 
@@ -114,10 +115,16 @@ let coordinates str =
 let num_ships_sunk = ref 0 (* Tracks the number of sunk ships *)
 
 let get_ships size =
-  match size with
-  | 5 ->
-      [ 2; 3 ] (* Example: For a 5x5 board, return two ships of sizes 2 and 3 *)
-  | _ -> [ 2; 3; 4; 5 ]
+  (* Example: For a 5x5 board, return a ship of size 4, two ships of size 3, and
+     a ship of size 2 *)
+  if size >= 5 && size <= 9 then [ 4; 3; 3; 2 ]
+  else if size >= 10 && size <= 14 then [ 4; 4; 3; 3; 2; 2 ]
+  else if size >= 15 && size <= 18 then [ 5; 5; 4; 3; 3; 3; 2; 2 ]
+  else if size >= 19 && size <= 21 then [ 7; 5; 4; 4; 3; 3; 2 ]
+  else if size >= 22 && size <= 24 then [ 9; 8; 6; 5; 5; 4; 3; 3; 3; 2; 2 ]
+  else if size >= 25 && size <= 26 then
+    [ 10; 9; 9; 8; 8; 6; 4; 4; 4; 3; 3; 3; 2 ]
+  else [ 2; 3; 4; 5 ]
 (* Default case for larger boards *)
 
 let validate_ship length coord grid = true
