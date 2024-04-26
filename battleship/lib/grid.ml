@@ -136,14 +136,57 @@ let get_ships size =
 
 (*Possible edge case, what if coord1 and coord2 are the same? is ship still
   valid?*)
-let validate_ship length coord1 coord2 grid =
+(* Should always be in the form where coord1 is leftmost/topmost coordinate and
+   coord2 is rightmost/lowest coordinate*)
+let validate_ship length coord1 coord2 (grid : t) =
   let c1x, c1y = coordinates coord1 in
   let c2x, c2y = coordinates coord2 in
-  (*checks if ship is not diagonal *)
-  if c1x = c2x then
+  let tmp = Array.make length Water in
+  (*checks if ship is out of bounds, then diagonal*)
+  if
+    c1x < 0
+    || c1x >= Array.length grid.(0)
+    || c2x < 0
+    || c2x >= Array.length grid.(0)
+    || c1y < 0
+    || c1y >= Array.length grid
+    || c2y < 0
+    || c2y >= Array.length grid
+  then false
+  else if c1x = c2x then
     (*checks if coordinate ship length matches given length *)
-    abs (c2x - c1x) = length
-  else if c1y = c2y then abs (c2y - c1y) = length
+    abs (c2y - c1y) + 1 = length
+    &&
+    (*gets the specific location we are looking at*)
+    (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
+    let () =
+      for x = 0 to length - 1 do
+        tmp.(x) <- grid.(c1x).(c1y + x)
+      done
+    in
+    Array.for_all
+      (fun x ->
+        match x with
+        | Ship _ -> false
+        | Destroyed -> false
+        | _ -> true)
+      tmp
+  else if c1y = c2y then
+    abs (c2x - c1x) + 1 = length
+    &&
+    (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
+    let () =
+      for x = 0 to length - 1 do
+        tmp.(x) <- grid.(c1x + x).(c1y)
+      done
+    in
+    Array.for_all
+      (fun x ->
+        match x with
+        | Ship _ -> false
+        | Destroyed -> false
+        | _ -> true)
+      tmp
   else false
 
 let hit_ship (coord : string) (grid : t) = [ "dummy" ]

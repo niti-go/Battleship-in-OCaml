@@ -1,27 +1,17 @@
 (* lib/grid.mli: Interface for the Battleship grid module *)
 
+type cell
 (** Type representing the different possible states of a cell in the game grid *)
-type cell =
-  | Water
-  | Miss
-  | Ship of {
-      id : int;
-      length : int; (*Invariant: all ships of same id have same "length" field*)
-    }
-  | Hit of {
-      id : int;
-      length : int;
-    }
-  | Destroyed (* destroyed = sunk *)
-  | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
 
 (* COMPLETED ToDo 1: create type for grid. *)
-type t = cell array array
+type t
 
 val size : int
 
-(* alb2 *)
 val coordinates : string -> int * int
+(** [coordinates str] is the integer tuple Cartesian coordinates of a string
+    indicating a position on the board. Requires that [str] is in the form where
+    first character is "A-Z" and second character is a number. *)
 
 (* add 1 when is_sunk is true*)
 val num_ships_sunk : int ref
@@ -37,6 +27,7 @@ val print_grid : t -> unit
 
 val print_their_board : t -> unit
 
+(*Completed todo 2*)
 val get_ships : int -> int list
 (** [get_ships size] takes in the size of the board and determines a list of
     ships that the user must place and what lengths they should be. *)
