@@ -1,7 +1,7 @@
 open Battleship.Grid
 (**@authors Niti Goyal, Ginger McCoy, Naakai McDonald, Nidhi Soma *)
 
-let rec main_loop board =
+let rec main_loop (board : Battleship.Grid.t) =
   print_endline
     "Enter 'otherboard' to view the opponent's board, 'exit' to quit, or \
      'show' to see your board:";
