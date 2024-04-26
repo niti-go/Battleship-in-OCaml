@@ -90,10 +90,6 @@ let print_their_board (board : t) =
   in
   print_grid masked_board (* Reuse print_grid function *)
 
-(*Anyone have any idea what this func is for??*)
-let size =
-  10 (* **IS THIS SUPPOSED TO BE BOARD OR SHIP SIZE-- why neccessary??? *)
-
 let coordinates str =
   let col = String.get str 0 in
   (* This gets the letter *)

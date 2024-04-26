@@ -6,8 +6,6 @@ type cell
 (* COMPLETED ToDo 1: create type for grid. *)
 type t
 
-val size : int
-
 val coordinates : string -> int * int
 (** [coordinates str] is the integer tuple Cartesian coordinates of a string
     indicating a position on the board. Requires that [str] is in the form where
