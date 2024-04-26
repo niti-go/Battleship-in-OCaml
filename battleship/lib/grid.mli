@@ -6,7 +6,7 @@ type cell =
   | Miss
   | Ship of {
       id : int;
-      length : int;
+      length : int; (*Invariant: all ships of same id have same "length" field*)
     }
   | Hit of {
       id : int;
@@ -15,7 +15,7 @@ type cell =
   | Destroyed (* destroyed = sunk *)
   | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
 
-(* ToDo 1: create type for grid. COMPLETED *)
+(* COMPLETED ToDo 1: create type for grid. *)
 type t = cell array array
 
 val size : int
@@ -48,29 +48,31 @@ val get_ships : int -> int list
    bounds *)
 val validate_ship : int -> string -> t -> bool
 
-(* ToDo 4: Only call after we know the user hit the ship. Check every cell
-   (row/col of coordinate). Addes to string list if 1) has the same ship id 2)
-   is hit*)
+(* ToDo 4: We call this each time the user hits a ship. This checks every cell
+   in the row and column of that coordinate for other ships of that ID. (row/col
+   of coordinate). A cell will be added to a "hit list" (string list of cells)
+   if 1) it has the same ship id 2) is hit. This returns a list of other ship
+   cells of that same ID that have been hit.*)
 val hit_ship : string -> t -> string list
 
-(* ToDo 5: Check if length of list is length of string list, true if so. false
-   if otherwise. If hit_ship adds the beginning ship to the list then this
-   holds, if otherwise then length of list - 1 = length of ship. ASK GC IF
-   CONFUSED!*)
-val is_sunk : string -> t -> bool
+(* ToDo 5: Returns true if length of "hit list" is length of ship ID list
+   (number of ships of that ID), false if otherwise. This means that the ship
+   that was just hit has sunk the entire ship. ASK GC IF CONFUSED!*)
+val is_sunk : string list -> t -> bool
 
-(* ToDo 6: Change the state of the cell. Example ship -> hit, water -> miss.*)
-val change_state : string -> int -> unit
-
-(* ToDo 7: Change the state of the cell to ship. Also add ship id to Ship type
-   when initializing ship. Each ship must have different Id.*)
+(* ToDo 6: Change the state of the cell to ship. Used when placing initial
+   ships. Also add ship id to Ship type when initializing ship. Each ship must
+   have different Id.*)
 val change_to_ship : string -> int -> unit
 
-(* ToDo 8: Asks user to place the ships (using get_ships) and change the cells
-   on the grid depending on where the user tries to place their ship. (Use
-   validate_ships to validate ship.) Example: You have 4 ships to place of
-   length 4, 3, 3, and 2. Please give two coordinates in the form a1 to place
-   your ship of length 4. DO EACH LENGTH INDIVIDUALLY! after they place each
-   ship print the grid. call change_to_ship to give each ship a unique ship id.
-   this fxn will be called individually on each ship the user sets.*)
+(* ToDo 7: Change the state of the cell. Example ship -> hit, water -> miss.*)
+val change_state : string -> int -> unit
+
+(* ToDo 8: Asks user to place the ships (using get_ships) and change the
+   necessary cells on the grid to "ship". (Call validate_ships to validate
+   ship.) Example: You have 4 ships to place of length 4, 3, 3, and 2. Please
+   give two coordinates in the form a1 to place your ship of length 4. DO EACH
+   LENGTH INDIVIDUALLY! after they place each ship print the grid. call
+   change_to_ship to give each ship a unique ship id. this fxn will be called
+   individually on each ship the user sets.*)
 val set_ships : int list -> t -> unit
