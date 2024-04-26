@@ -1,10 +1,22 @@
 (* lib/grid.mli: Interface for the Battleship grid module *)
 
-(* ToDo 1: create type for grid *)
-(*type t = cell array array*)
-
-type cell
 (** Type representing the different possible states of a cell in the game grid *)
+type cell =
+  | Water
+  | Miss
+  | Ship of {
+      id : int;
+      length : int;
+    }
+  | Hit of {
+      id : int;
+      length : int;
+    }
+  | Destroyed (* destroyed = sunk *)
+  | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
+
+(* ToDo 1: create type for grid. COMPLETED *)
+type t = cell array array
 
 val size : int
 
@@ -17,13 +29,13 @@ val num_ships_sunk : int ref
 (* more time potential fxns: low and high fxn, low outputs a and high outputs
    1. *)
 
-val create_board : int -> string list list
+val create_board : int -> t
 (** Create a battleship grid of a given size with all cells initialized to Water *)
 
-val print_grid : string list list -> unit
+val print_grid : t -> unit
 (** Print a grid to the console with color coding for different cell states *)
 
-val print_their_board : string list list -> unit
+val print_their_board : t -> unit
 
 (* Takes in the size of the board and determines a list of ships that the user
    must place and what lengths they should be. *)
@@ -34,18 +46,18 @@ val get_ships : int -> int list
    (either x value has to be the same on both or y) 2) satisfy the given length
    (use math) 3) does nto overlap a pre existing ship 4) doesn't go out of
    bounds *)
-val validate_ship : int -> string -> string list list -> bool
+val validate_ship : int -> string -> t -> bool
 
 (* ToDo 4: Only call after we know the user hit the ship. Check every cell
    (row/col of coordinate). Addes to string list if 1) has the same ship id 2)
    is hit*)
-val hit_ship : string -> string list list -> string list
+val hit_ship : string -> t -> string list
 
 (* ToDo 5: Check if length of list is length of string list, true if so. false
    if otherwise. If hit_ship adds the beginning ship to the list then this
    holds, if otherwise then length of list - 1 = length of ship. ASK GC IF
    CONFUSED!*)
-val is_sunk : string -> string list list -> bool
+val is_sunk : string -> t -> bool
 
 (* ToDo 6: Change the state of the cell. Example ship -> hit, water -> miss.*)
 val change_state : string -> int -> unit
@@ -61,4 +73,4 @@ val change_to_ship : string -> int -> unit
    your ship of length 4. DO EACH LENGTH INDIVIDUALLY! after they place each
    ship print the grid. call change_to_ship to give each ship a unique ship id.
    this fxn will be called individually on each ship the user sets.*)
-val set_ships : int list -> string list list -> unit
+val set_ships : int list -> t -> unit

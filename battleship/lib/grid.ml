@@ -19,6 +19,9 @@ type cell =
       length : int;
     }
   | Destroyed (* destroyed = sunk *)
+  | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
+
+type t = cell array array
 
 let string_of_cell = function
   | Water -> "wo"
@@ -26,14 +29,16 @@ let string_of_cell = function
   | Ship _ -> "so" (* Ignoring id and length *)
   | Hit _ -> "sx" (* Ignoring id and length *)
   | Destroyed -> "sxx"
+  | Hidden -> "."
 
 let create_board size =
   if size < 5 || size > 26 then
     invalid_arg "Board size must be between 5 and 26";
-  List.init size (fun _ -> List.init size (fun _ -> string_of_cell Water))
+  Array.make size (Array.make size Water)
+(* List.init size (fun _ -> List.init size (fun _ -> string_of_cell Water)) *)
 
 (* Function to print the entire grid with row and column labels *)
-let print_grid grid =
+let print_grid (grid : t) =
   let print_header size =
     ANSITerminal.print_string [ ANSITerminal.on_default ] "    ";
     (* Padding for row numbers alignment *)
@@ -46,39 +51,41 @@ let print_grid grid =
     ANSITerminal.print_string [ ANSITerminal.on_default ] "\n"
     (* Move to the next line after headers *)
   in
-  List.iteri
+  Array.iteri
     (fun i row ->
       ANSITerminal.print_string
         [ ANSITerminal.on_default ]
         (string_of_int (i + 1) ^ "  ");
       (* Print row number with padding *)
-      List.iter
+      Array.iter
         (fun cell ->
           let color =
-            match cell with
+            match string_of_cell cell with
             | "wo" -> [ ANSITerminal.blue ]
             | "wx" -> [ ANSITerminal.cyan ]
             | "sx" -> [ ANSITerminal.magenta ]
             | "sxx" -> [ ANSITerminal.red ]
             | _ -> [ ANSITerminal.on_default ]
           in
-          ANSITerminal.print_string color (cell ^ "  "))
+          ANSITerminal.print_string color (string_of_cell cell ^ "  "))
         row;
       (* Print each cell with color and spacing *)
       ANSITerminal.print_string [ ANSITerminal.on_default ] "\n")
     grid;
   (* New line for each row *)
-  print_header (List.length grid)
+  print_header (Array.length grid)
 (* Call to print the column headers at the bottom *)
 
 (* Additional function to print the opponent's view of the board *)
-let print_their_board board =
+let print_their_board (board : t) =
   let masked_board =
-    List.map
-      (List.map (fun cell ->
+    Array.map
+      (Array.map (fun cell ->
            match cell with
-           | "wx" | "sx" | "sxx" -> cell (* Misses and hits remain visible *)
-           | _ -> "." (* Hide water and ships not hit *)))
+           | Hit _ -> cell
+           | Miss -> cell
+           | Destroyed -> cell (* Misses and hits remain visible *)
+           | _ -> Hidden (* Hide water and ships not hit *)))
       board
   in
   print_grid masked_board (* Reuse print_grid function *)
@@ -127,14 +134,14 @@ let get_ships size =
   else [ 2; 3; 4; 5 ]
 (* Default case for larger boards *)
 
-let validate_ship length coord grid = true
+let validate_ship (length : int) (coord : string) (grid : t) = true
 (* Placeholder that always validates ship placement. Implement actual logic
    later. *)
 
-let hit_ship coord grid = [ "dummy" ]
+let hit_ship (coord : string) (grid : t) = [ "dummy" ]
 (* Placeholder returning a dummy list. Implement actual logic later. *)
 
-let is_sunk ship_id grid = false
+let is_sunk ship_id (grid : t) = false
 (* Placeholder that assumes ships are not sunk. Implement actual logic later. *)
 
 let change_state state index = ()
@@ -145,6 +152,6 @@ let change_to_ship ship_id index = ()
 (* Placeholder function that does nothing. Implement ship placement logic
    later. *)
 
-let set_ships ship_lengths grid = ()
+let set_ships ship_lengths (grid : t) = ()
 (* Placeholder function that does nothing. Implement ship setting logic
    later. *)
