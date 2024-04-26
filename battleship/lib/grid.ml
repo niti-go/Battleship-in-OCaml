@@ -127,7 +127,18 @@ let get_ships size =
   else [ 2; 3; 4; 5 ]
 (* Default case for larger boards *)
 
-let validate_ship length coord grid = true
+(*Possible edge case, what if coord1 and coord2 are the same? is ship still
+  valid?*)
+let validate_ship length coord1 coord2 grid =
+  let c1x, c1y = coordinates coord1 in
+  let c2x, c2y = coordinates coord2 in
+  (*checks if ship is not diagonal *)
+  if c1x = c2x then
+    (*checks if coordinate ship length matches given length *)
+    abs (c2x - c1x) = length
+  else if c1y = c2y then abs (c2y - c1y) = length
+  else false
+
 (* Placeholder that always validates ship placement. Implement actual logic
    later. *)
 

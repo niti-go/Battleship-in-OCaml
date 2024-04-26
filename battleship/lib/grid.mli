@@ -25,16 +25,16 @@ val print_grid : string list list -> unit
 
 val print_their_board : string list list -> unit
 
-(* Takes in the size of the board and determines a list of ships that the user
-   must place and what lengths they should be. *)
 val get_ships : int -> int list
+(** [get_ships size] takes in the size of the board and determines a list of
+    ships that the user must place and what lengths they should be. *)
 
 (* ToDo 3: take in the two coordinates, the length of the ship, and the grid and
    return true if all three hold and false if otherwise: 1) is not diagonal
    (either x value has to be the same on both or y) 2) satisfy the given length
    (use math) 3) does nto overlap a pre existing ship 4) doesn't go out of
-   bounds *)
-val validate_ship : int -> string -> string list list -> bool
+   bounds. Length must be GREATER/GREATER THAN OR EQUAL TO???? 0. *)
+val validate_ship : int -> string -> string -> string list list -> bool
 
 (* ToDo 4: Only call after we know the user hit the ship. Check every cell
    (row/col of coordinate). Addes to string list if 1) has the same ship id 2)
