@@ -185,11 +185,55 @@ let validate_ship length coord1 coord2 (grid : t) =
       tmp
   else false
 
-let hit_ship (coord : string) (grid : t) = [ "dummy" ]
-(* Placeholder returning a dummy list. Implement actual logic later. *)
+(*TODO 4 COMPLETED *)
+let hit_ship coord ship_id grid =
+  let row_index, col_index = coordinates coord in
+  let hit_coords = ref [] in
+  (* Function that loops through the row of the given coordinate *)
+  let check_row grid =
+    let row = Array.get grid row_index in
+    (* Access the cell in the specified column *)
+    Array.iteri
+      (fun col_index cell ->
+        match cell with
+        | Hit { id = curr_id; length = _ } when curr_id = ship_id ->
+            if not (List.mem (row_index, col_index) !hit_coords) then
+              hit_coords := (row_index, col_index) :: !hit_coords
+        | _ -> ())
+      row
+  in
 
-let is_sunk ship_id (grid : t) = false
-(* Placeholder that assumes ships are not sunk. Implement actual logic later. *)
+  (* Function that loops through the column of the given coordinate *)
+  let check_col grid =
+    Array.iteri
+      (fun row_index row ->
+        let cell = row.(col_index) in
+        match cell with
+        | Hit { id = curr_id; length = _ } when curr_id = ship_id ->
+            if not (List.mem (row_index, col_index) !hit_coords) then
+              hit_coords := (row_index, col_index) :: !hit_coords
+        | _ -> ())
+      grid
+  in
+
+  check_row grid;
+  check_col grid;
+
+  !hit_coords
+
+(*TODO 5 COMPLETED *)
+let is_sunk coord ship_id grid =
+  let hit_coords = hit_ship coord ship_id grid in
+  Array.exists
+    (fun row ->
+      Array.exists
+        (fun cell ->
+          match cell with
+          | Hit { id = curr_id; length = len_ship }
+            when len_ship = List.length hit_coords && curr_id = ship_id -> true
+          | _ -> false)
+        row)
+    grid
 
 let change_state state index = ()
 (* Placeholder function that does nothing. Implement actual state changing logic
