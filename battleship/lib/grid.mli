@@ -54,10 +54,10 @@ val is_sunk : string -> int -> t -> bool
 (*ToDo 6: Change the state of the cell to ship. Used when placing initial ships.
   Also add ship id to Ship type when initializing ship. Each ship must have
   different Id.*)
-val change_to_ship : string -> int -> unit
+val change_to_ship : t -> int -> int -> int * int -> unit
 
 (* ToDo 7: Change the state of the cell. Example ship -> hit, water -> miss.*)
-val change_state : string -> int -> unit
+val change_state : t -> 'a -> int * int -> unit
 
 (* ToDo 8: Asks user to place the ships (using get_ships) and change the
    necessary cells on the grid to "ship". (Call validate_ships to validate
