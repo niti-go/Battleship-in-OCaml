@@ -247,7 +247,10 @@ let change_state (grid : t) state (index : int * int) = ()
 (*Changes the state of a cell SPECIFICALLY TO A SHIP of ship_id [ship_id]. It
   was previously water,for positioning initial ships at the beginning of the
   game.*)
-let change_to_ship (grid : t) (ship_id : int) (index : int * int) = ()
+let change_to_ship (grid : t) (ship_id : int) (ship_length : int)
+    (index : int * int) =
+  let row, col = index in
+  grid.(row).(col) <- Ship { id = ship_id; length = ship_length }
 (* Placeholder function that does nothing. Implement ship placement logic
    later. *)
 
