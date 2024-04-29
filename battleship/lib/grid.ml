@@ -238,11 +238,16 @@ let is_sunk coord ship_id grid =
         row)
     grid
 
-let change_state state index = ()
+(*Changes the state of a cell, either upon a player hitting the cell, or upon
+  positioning initial ships at the beginning of the game.*)
+let change_state (grid : t) state (index : int * int) = ()
 (* Placeholder function that does nothing. Implement actual state changing logic
    later. *)
 
-let change_to_ship ship_id index = ()
+(*Changes the state of a cell SPECIFICALLY TO A SHIP of ship_id [ship_id]. It
+  was previously water,for positioning initial ships at the beginning of the
+  game.*)
+let change_to_ship (grid : t) (ship_id : int) (index : int * int) = ()
 (* Placeholder function that does nothing. Implement ship placement logic
    later. *)
 
