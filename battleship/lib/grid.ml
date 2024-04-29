@@ -90,7 +90,8 @@ let print_their_board (board : t) =
   in
   print_grid masked_board (* Reuse print_grid function *)
 
-let coordinates str =
+(** [coordinates "A5" returns a tuple containing the pair "0,6"]*)
+let coordinates (str : string) =
   let col = String.get str 0 in
   (* This gets the letter *)
   let row = String.sub str 1 (String.length str - 1) in
@@ -134,6 +135,8 @@ let get_ships size =
   valid?*)
 (* Should always be in the form where coord1 is leftmost/topmost coordinate and
    coord2 is rightmost/lowest coordinate*)
+(*TODO INSTEAD OF TAKING IN LENGTH, RETURN A TUPLE (bool, length) WHERE IF THE
+  SHIP IS VALID, RETURN THE LENGTH OF THE SHIP*)
 let validate_ship length coord1 coord2 (grid : t) =
   let c1x, c1y = coordinates coord1 in
   let c2x, c2y = coordinates coord2 in
@@ -243,6 +246,28 @@ let change_to_ship ship_id index = ()
 (* Placeholder function that does nothing. Implement ship placement logic
    later. *)
 
-let set_ships ship_lengths (grid : t) = ()
-(* Placeholder function that does nothing. Implement ship setting logic
-   later. *)
+(*TODO GET RID OF LENGTH PARAMETER FROM VALIDATE_SHIP*)
+let rec ask_for_coords (grid : t) : string * string =
+  print_endline "Enter the top left coordinate of a new ship. (e.g A5): ";
+  let left_coord = read_line () in
+  print_endline "Enter the bottom right coordinate. (e.g C5): ";
+  let right_coord = read_line () in
+  if String.length left_coord <> 2 || String.length right_coord <> 2 then
+    let () = print_endline "That is not valid. Try again. " in
+    ask_for_coords grid
+  else if validate_ship 5 left_coord right_coord grid = true then
+    (left_coord, right_coord)
+  else
+    let () = print_endline "That is not valid. Try again. " in
+    ask_for_coords grid
+
+let set_ships (ship_lengths : int list) (grid : t) =
+  let () =
+    print_endline
+      ("You have "
+      ^ string_of_int (List.length ship_lengths)
+      ^ "ships left to place.")
+  in
+  let c1, c2 = ask_for_coords grid in
+  ()
+(* Not yet complete *)
