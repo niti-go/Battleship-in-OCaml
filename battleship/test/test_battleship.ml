@@ -1,7 +1,9 @@
 open OUnit2
 open Battleship.Grid
 
-let test_coordinates _ = assert_equal (0, 6) (Battleship.Grid.coordinates "A5")
+(* need to fix functionaility of coordinates & review test cases and make sample
+   grid. currently recieveing error. *)
+let test_coordinates _ = assert_equal (0, 6) (coordinates "A5")
 
 let test_grid =
   "tests functionality of grid module"
