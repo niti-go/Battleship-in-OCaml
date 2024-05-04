@@ -90,7 +90,7 @@ let print_their_board (board : t) =
   in
   print_grid masked_board (* Reuse print_grid function *)
 
-(** [coordinates "A5" returns a tuple containing the pair "0,6"]*)
+(** [coordinates "A5" returns a tuple containing the pair "4,0" (x = 0, y = 4)]*)
 let coordinates (str : string) =
   let col = String.get str 0 in
   (* This gets the letter *)
