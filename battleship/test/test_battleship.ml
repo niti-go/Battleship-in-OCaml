@@ -9,6 +9,11 @@ let test_string_of_cell _ =
   assert_equal "sxx" (string_of_cell Destroyed);
   assert_equal "." (string_of_cell Hidden)
 
+let test_create_board _ =
+  assert_equal (Array.make_matrix 5 5 Water) (create_board 5);
+  assert_equal (Array.make_matrix 17 17 Water) (create_board 17);
+  assert_equal (Array.make_matrix 26 26 Water) (create_board 26)
+
 let test_coordinates _ =
   assert_equal (0, 0) (coordinates "A1");
   assert_equal (1, 0) (coordinates "A2");
