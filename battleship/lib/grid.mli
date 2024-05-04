@@ -1,10 +1,25 @@
 (* lib/grid.mli: Interface for the Battleship grid module *)
 
-type cell
+type cell =
+  | Water
+  | Miss
+  | Ship of {
+      id : int;
+      length : int;
+    }
+  | Hit of {
+      id : int;
+      length : int;
+    }
+  | Destroyed (* destroyed = sunk *)
+  | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
+
 (** Type representing the different possible states of a cell in the game grid *)
 
 (* COMPLETED ToDo 1: create type for grid. *)
-type t
+type t = cell array array
+
+val string_of_cell : cell -> string
 
 val coordinates : string -> int * int
 (** [coordinates str] is the integer tuple Cartesian coordinates of a string
