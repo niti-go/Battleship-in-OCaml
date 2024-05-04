@@ -42,6 +42,11 @@ let test_get_ships _ =
   assert_equal [ 2; 3; 4; 5 ] (get_ships 4);
   assert_equal [ 2; 3; 4; 5 ] (get_ships 28)
 
+(* Completed functions to test next: print_grid, print_their_board, hit_ship,
+   is_sunk *)
+(* Incomplete functions or not ready test next: num_ships_sunk, validate_ship,
+   change_to_ship, change_state, set_ships *)
+
 let test_grid =
   "tests functionality of grid module"
   >::: [
