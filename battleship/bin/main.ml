@@ -22,12 +22,21 @@ let rec main_loop (board : Battleship.Grid.t) =
       main_loop board
 
 let () =
-  print_endline "Welcome to Battleship!";
+  print_endline "Welcome to Battleship! ";
+  let rec enter_size () =
   print_endline "Please enter the grid size (5 to 26): ";
-  let size = read_int () in
+  let user_in = read_line() in
+  try
+  let size = int_of_string (user_in) in
   if size < 5 || size > 26 then (
     print_endline "Invalid size. The size must be between 5 and 26.";
-    exit 0)
-  else
+    enter_size())
+  else 
     let board = create_board size in
     main_loop board (* Start the interactive loop with the initial board *)
+  with 
+  | Failure _ -> print_endline "Invalid argument."; enter_size()
+  | _ -> print_endline "Something went wrong. Shutting down..."
+
+  in
+  enter_size ()

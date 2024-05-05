@@ -137,10 +137,9 @@ let get_ships size =
    coord2 is rightmost/lowest coordinate*)
 (*TODO INSTEAD OF TAKING IN LENGTH, RETURN A TUPLE (bool, length) WHERE IF THE
   SHIP IS VALID, RETURN THE LENGTH OF THE SHIP*)
-let validate_ship length coord1 coord2 (grid : t) =
+let validate_ship coord1 coord2 (grid : t) =
   let c1x, c1y = coordinates coord1 in
   let c2x, c2y = coordinates coord2 in
-  let tmp = Array.make length Water in
   (*checks if ship is out of bounds, then diagonal*)
   if
     c1x < 0
@@ -151,42 +150,44 @@ let validate_ship length coord1 coord2 (grid : t) =
     || c1y >= Array.length grid
     || c2y < 0
     || c2y >= Array.length grid
-  then false
+    (*using dummy length*)
+  then (false,0)
   else if c1x = c2x then
-    (*checks if coordinate ship length matches given length *)
-    abs (c2y - c1y) + 1 = length
-    &&
+    let length = abs (c2y - c1y) + 1 in
+    let tmp = Array.make length Water in
     (*gets the specific location we are looking at*)
     (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
     let () =
       for x = 0 to length - 1 do
         tmp.(x) <- grid.(c1x).(c1y + x)
       done
-    in
+    in 
+    (* returns whether ship valid and calculated length *)
+    (
     Array.for_all
       (fun x ->
         match x with
         | Ship _ -> false
         | Destroyed -> false
         | _ -> true)
-      tmp
+      tmp, length)
   else if c1y = c2y then
-    abs (c2x - c1x) + 1 = length
-    &&
+    let length = abs (c2x - c1x) + 1 in
+    let tmp = Array.make length Water in
     (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
     let () =
       for x = 0 to length - 1 do
         tmp.(x) <- grid.(c1x + x).(c1y)
       done
-    in
+    in (
     Array.for_all
       (fun x ->
         match x with
         | Ship _ -> false
         | Destroyed -> false
         | _ -> true)
-      tmp
-  else false
+      tmp,  abs (c2x - c1x) + 1)
+  else (false, 0)
 
 (*TODO 4 COMPLETED *)
 let hit_ship coord ship_id grid =
@@ -263,7 +264,7 @@ let rec ask_for_coords (grid : t) : string * string =
   if String.length left_coord <> 2 || String.length right_coord <> 2 then
     let () = print_endline "That is not valid. Try again. " in
     ask_for_coords grid
-  else if validate_ship 5 left_coord right_coord grid = true then
+  else if fst(validate_ship left_coord right_coord grid) = true then
     (left_coord, right_coord)
   else
     let () = print_endline "That is not valid. Try again. " in
