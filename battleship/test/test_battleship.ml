@@ -42,10 +42,43 @@ let test_get_ships _ =
   assert_equal [ 2; 3; 4; 5 ] (get_ships 4);
   assert_equal [ 2; 3; 4; 5 ] (get_ships 28)
 
-(* Completed functions to test next: print_grid, print_their_board, hit_ship,
-   is_sunk *)
+(* let test_print_grid _ = let test_print_their_board _ = *)
+
+(* UNFINSHED: cannot test hit_ship without set_ships let example_grid =
+   set_ships [4; 3; 3; 2] (create_board 5)
+
+   let test_hit_ship _ = assert_equal [ 2; 3; 4; 5 ] (hit_ship "A4" 1 );
+   assert_equal [ 2; 3; 4; 5 ] (hit_ship 4); assert_equal [ 2; 3; 4; 5 ]
+   (hit_ship 4);
+
+   (* UNFINSHED: cannot test is_sunk without set_ships *) let ex_board_2 =
+   set_ships [4; 3; 3; 2] (create_board 7) in let hit_ship_4 = hit_ship "A1" 4
+   ex_hit_ships in
+
+   let hit_ship_4_2 = hit_ship "A2" 4 hit_ship_4 in
+
+   let hit_ship_3 = hit_ship "C2" 3 hit_ship_4_2 in
+
+   let hit_ship_3_2 = hit_ship "C3" 3 hit_ship_3 in
+
+   let hit_ship_2 = hit_ship "E5" 2 hit_ship_3_2 in
+
+   hit_ship "G5" 2 hit_ship_2
+
+   1 SX wo wo wo wo wo wo 2 SX wo SX|SO SO SO SO 3 wo wo SX wo wo wo wo 4 wo wo
+   SO wo wo wo wo 5 wo wo wo wo SX SO SX 6 wo wo wo wo wo wo wo 7 wo wo wo wo wo
+   wo wo A B C D E F G
+
+   let test_is_sunk _ = assert_equal true (is_sunk "A1" 1 example_grid); (*
+   entire ship is hit*) assert_equal false (is_sunk "B3" 2 example_grid); (*
+   some of the ship is hit*) assert_equal false (is_sunk "C1" 3 example_grid);
+   (* every other part of the ship is hit*) assert_equal false (is_sunk "C1" 3
+   example_grid) none of the ship is hit (and it is side by side another
+   ship) *)
+
+(* Completed functions to test next: print_grid, print_their_board, hit_ship, *)
 (* Incomplete functions or not ready test next: num_ships_sunk, validate_ship,
-   change_to_ship, change_state, set_ships *)
+   change_to_ship, change_state, set_ships, is_sunk *)
 
 let test_grid =
   "tests functionality of grid module"
