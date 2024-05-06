@@ -70,7 +70,8 @@ val is_sunk : string -> int -> t -> bool
   different Id.*)
 val change_to_ship : t -> int -> int -> int * int -> unit
 
-(* ToDo 7: Change the state of the cell. Example ship -> hit, water -> miss.*)
+(* COMPLETED ToDo 7: Change the state of the cell. Example ship -> hit, water ->
+   miss.*)
 val change_state : t -> cell -> string -> t
 
 (* ToDo 8: Asks user to place the ships (using get_ships) and change the

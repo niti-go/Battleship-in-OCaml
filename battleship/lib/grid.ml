@@ -254,7 +254,6 @@ let change_state grid state coordinate =
       else row_cell)
     grid
 
-(* TODO 8 COMPLETED *)
 (*Changes the state of a cell SPECIFICALLY TO A SHIP of ship_id [ship_id]. It
   was previously water,for positioning initial ships at the beginning of the
   game.*)

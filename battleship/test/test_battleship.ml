@@ -53,7 +53,12 @@ let test_change_state _ =
   let change = change_state testing_grid Miss "D1" in
   assert_equal "wx" (string_of_cell change.(0).(3))
 
-(* let test_change_to_ship _ = *)
+let test_change_to_ship _ =
+  let test_ships = create_board 5 in
+  let new_ship_4 = change_to_ship test_ships 1 4 (0, 0) in
+  assert_equal "so" (string_of_cell test_ships.(0).(0))
+
+(* change_to_ship must be further implemented. *)
 
 (* let test_print_grid _ = let test_print_their_board _ = *)
 
@@ -102,6 +107,8 @@ let test_grid =
          "Tests functionality of create_board function." >:: test_create_board;
          "Tests functionality of get_ships function." >:: test_get_ships;
          "Tests functionality of change_state function." >:: test_change_state;
+         "Tests functionality of change_to_ship function."
+         >:: test_change_to_ship;
        ]
 
 let _ = run_test_tt_main test_grid
