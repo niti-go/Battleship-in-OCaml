@@ -42,6 +42,19 @@ let test_get_ships _ =
   assert_equal [ 2; 3; 4; 5 ] (get_ships 4);
   assert_equal [ 2; 3; 4; 5 ] (get_ships 28)
 
+let test_change_state _ =
+  let testing_grid = create_board 5 in
+  let change = change_state testing_grid Miss "A1" in
+  assert_equal "wx" (string_of_cell change.(0).(0));
+  let change = change_state testing_grid Miss "B1" in
+  assert_equal "wx" (string_of_cell change.(0).(1));
+  let change = change_state testing_grid Miss "C1" in
+  assert_equal "wx" (string_of_cell change.(0).(2));
+  let change = change_state testing_grid Miss "D1" in
+  assert_equal "wx" (string_of_cell change.(0).(3))
+
+(* let test_change_to_ship _ = *)
+
 (* let test_print_grid _ = let test_print_their_board _ = *)
 
 (* UNFINSHED: cannot test hit_ship without set_ships let example_grid =
@@ -88,6 +101,7 @@ let test_grid =
          "Tests functionality of coordinates function." >:: test_coordinates;
          "Tests functionality of create_board function." >:: test_create_board;
          "Tests functionality of get_ships function." >:: test_get_ships;
+         "Tests functionality of change_state function." >:: test_change_state;
        ]
 
 let _ = run_test_tt_main test_grid
