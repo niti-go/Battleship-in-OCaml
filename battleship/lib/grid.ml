@@ -239,12 +239,21 @@ let is_sunk coord ship_id grid =
         row)
     grid
 
+(* TODO 7 COMPLETED *)
 (*Changes the state of a cell, either upon a player hitting the cell, or upon
   positioning initial ships at the beginning of the game.*)
-let change_state (grid : t) state (index : int * int) = ()
-(* Placeholder function that does nothing. Implement actual state changing logic
-   later. *)
+let change_state grid state coordinate =
+  let row, col = coordinates coordinate in
+  Array.mapi
+    (fun x row_cell ->
+      if x = row then
+        Array.mapi
+          (fun y col_cell -> if y = col then state else col_cell)
+          row_cell
+      else row_cell)
+    grid
 
+(* TODO 8 COMPLETED *)
 (*Changes the state of a cell SPECIFICALLY TO A SHIP of ship_id [ship_id]. It
   was previously water,for positioning initial ships at the beginning of the
   game.*)
@@ -252,8 +261,6 @@ let change_to_ship (grid : t) (ship_id : int) (ship_length : int)
     (index : int * int) =
   let row, col = index in
   grid.(row).(col) <- Ship { id = ship_id; length = ship_length }
-(* Placeholder function that does nothing. Implement ship placement logic
-   later. *)
 
 (*TODO GET RID OF LENGTH PARAMETER FROM VALIDATE_SHIP*)
 let rec ask_for_coords (grid : t) : string * string =
