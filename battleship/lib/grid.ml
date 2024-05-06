@@ -151,7 +151,7 @@ let validate_ship coord1 coord2 (grid : t) =
     || c2y < 0
     || c2y >= Array.length grid
     (*using dummy length*)
-  then (false,0)
+  then (false, 0)
   else if c1x = c2x then
     let length = abs (c2y - c1y) + 1 in
     let tmp = Array.make length Water in
@@ -161,16 +161,16 @@ let validate_ship coord1 coord2 (grid : t) =
       for x = 0 to length - 1 do
         tmp.(x) <- grid.(c1x).(c1y + x)
       done
-    in 
+    in
     (* returns whether ship valid and calculated length *)
-    (
-    Array.for_all
-      (fun x ->
-        match x with
-        | Ship _ -> false
-        | Destroyed -> false
-        | _ -> true)
-      tmp, length)
+    ( Array.for_all
+        (fun x ->
+          match x with
+          | Ship _ -> false
+          | Destroyed -> false
+          | _ -> true)
+        tmp,
+      length )
   else if c1y = c2y then
     let length = abs (c2x - c1x) + 1 in
     let tmp = Array.make length Water in
@@ -179,14 +179,15 @@ let validate_ship coord1 coord2 (grid : t) =
       for x = 0 to length - 1 do
         tmp.(x) <- grid.(c1x + x).(c1y)
       done
-    in (
-    Array.for_all
-      (fun x ->
-        match x with
-        | Ship _ -> false
-        | Destroyed -> false
-        | _ -> true)
-      tmp,  abs (c2x - c1x) + 1)
+    in
+    ( Array.for_all
+        (fun x ->
+          match x with
+          | Ship _ -> false
+          | Destroyed -> false
+          | _ -> true)
+        tmp,
+      abs (c2x - c1x) + 1 )
   else (false, 0)
 
 (*TODO 4 COMPLETED *)
@@ -271,7 +272,7 @@ let rec ask_for_coords (grid : t) : string * string =
   if String.length left_coord <> 2 || String.length right_coord <> 2 then
     let () = print_endline "That is not valid. Try again. " in
     ask_for_coords grid
-  else if fst(validate_ship left_coord right_coord grid) = true then
+  else if fst (validate_ship left_coord right_coord grid) = true then
     (left_coord, right_coord)
   else
     let () = print_endline "That is not valid. Try again. " in

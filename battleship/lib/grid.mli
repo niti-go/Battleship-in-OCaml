@@ -46,12 +46,11 @@ val get_ships : int -> int list
     ships that the user must place and what lengths they should be. *)
 
 (* ToDo 3: take in the two coordinates, the length of the ship, and the grid and
-   return true if all three hold and false if otherwise: 
-   1) is not diagonal (either x value has to be the same on both or y) 
-   2) does not overlap a pre existing ship 
-   3) doesn't go out of bounds. *)
+   return true if all three hold and false if otherwise: 1) is not diagonal
+   (either x value has to be the same on both or y) 2) does not overlap a pre
+   existing ship 3) doesn't go out of bounds. *)
 
-val validate_ship : string -> string -> t -> (bool * int)
+val validate_ship : string -> string -> t -> bool * int
 
 (* COMPLETED ToDo 4: We call this each time the user hits a ship. This checks
    every cell in the row and column of that coordinate for other ships of that
@@ -72,7 +71,7 @@ val is_sunk : string -> int -> t -> bool
 val change_to_ship : t -> int -> int -> int * int -> unit
 
 (* ToDo 7: Change the state of the cell. Example ship -> hit, water -> miss.*)
-val change_state : t -> 'a -> int * int -> unit
+val change_state : t -> cell -> string -> t
 
 (* ToDo 8: Asks user to place the ships (using get_ships) and change the
    necessary cells on the grid to "ship". (Call validate_ships to validate
