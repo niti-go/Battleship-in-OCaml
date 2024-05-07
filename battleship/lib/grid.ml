@@ -285,5 +285,30 @@ let set_ships (ship_lengths : int list) (grid : t) =
       ^ "ships left to place.")
   in
   let c1, c2 = ask_for_coords grid in
-  ()
-(* Not yet complete *)
+  let is_valid, id = validate_ship c1 c2 grid in
+  if is_valid = true then
+    let c1x, c1y = coordinates c1 in
+    let c2x, c2y = coordinates c2 in
+    if c1x < c2x then
+      for y = c1x to c2x + 1 do
+        let () = change_to_ship grid id (abs (c1x - c2x)) (y, c1y) in
+        ()
+      done
+    else if c1x > c2x then
+      for y = c2x to c1x + 1 do
+        let () = change_to_ship grid id (abs (c1x - c2x)) (y, c1y) in
+        ()
+      done
+    else if c1y < c2y then
+      for y = c1y to c2y + 1 do
+        let () = change_to_ship grid id (abs (c1y - c2y)) (y, c1x) in
+        ()
+      done
+    else if c1y > c2y then
+      for y = c2y to c1y + 1 do
+        let () = change_to_ship grid id (abs (c1y - c2y)) (y, c1x) in
+        ()
+      done
+    else
+      let () = print_string "Something went wrong in set_ships." in
+      ()
