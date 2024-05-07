@@ -15,7 +15,7 @@ let test_coordinates _ =
   assert_equal (1, 1) (coordinates "B2");
   assert_equal (2, 2) (coordinates "C3");
   assert_equal (4, 0) (coordinates "A5");
-  assert_equal (4, 0) (coordinates "A5");
+  assert_equal (4, 3) (coordinates "D5");
   assert_equal (16, 14) (coordinates "O17");
   assert_equal (25, 25) (coordinates "Z26")
 

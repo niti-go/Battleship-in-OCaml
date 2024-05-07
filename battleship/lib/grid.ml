@@ -90,7 +90,7 @@ let print_their_board (board : t) =
   in
   print_grid masked_board (* Reuse print_grid function *)
 
-(** [coordinates "A5" returns a tuple containing the pair "4,0" (x = 0, y = 4)]*)
+(** [coordinates "A5" returns a tuple containing the pair "4,0" i.e. (row index, col index) (x = 0, y = 4)]*)
 let coordinates (str : string) =
   let col = String.get str 0 in
   (* This gets the letter *)
@@ -260,7 +260,12 @@ let change_state grid state coordinate =
 let change_to_ship (grid : t) (ship_id : int) (ship_length : int)
     (index : int * int) =
   let row, col = index in
-  grid.(row).(col) <- Ship { id = ship_id; length = ship_length }
+  grid.(row).(col) <- Ship { id = ship_id; length = ship_length };
+  (*below are print statements for debugging*)
+  print_endline
+    ("changing row " ^ string_of_int row ^ "and changing column "
+   ^ string_of_int col ^ ": ");
+  print_grid grid
 
 (*TODO GET RID OF LENGTH PARAMETER FROM VALIDATE_SHIP*)
 let rec ask_for_coords (grid : t) : string * string =
@@ -289,26 +294,40 @@ let set_ships (ship_lengths : int list) (grid : t) =
   if is_valid = true then
     let c1x, c1y = coordinates c1 in
     let c2x, c2y = coordinates c2 in
+    let () =
+      print_endline ("c1x" ^ string_of_int c1x ^ "c1y" ^ string_of_int c1y)
+    in
+    let () =
+      print_endline ("c2x" ^ string_of_int c2x ^ "c2y" ^ string_of_int c2y)
+    in
     if c1x < c2x then
-      for y = c1x to c2x + 1 do
-        let () = change_to_ship grid id (abs (c1x - c2x)) (y, c1y) in
+      let ship_length = abs (c1x - c2x) + 1 in
+      let () = print_endline "c1x < c2x" in
+      for x = c1x to c2x + 1 do
+        let () = print_endline (string_of_int x) in
+        let () = change_to_ship grid id ship_length (x, c1y) in
         ()
       done
     else if c1x > c2x then
-      for y = c2x to c1x + 1 do
-        let () = change_to_ship grid id (abs (c1x - c2x)) (y, c1y) in
+      for x = c2x to c1x + 1 do
+        let () = print_endline (string_of_int x) in
+        let () = change_to_ship grid id (abs (c1x - c2x) + 1) (x, c1y) in
         ()
       done
     else if c1y < c2y then
       for y = c1y to c2y + 1 do
-        let () = change_to_ship grid id (abs (c1y - c2y)) (y, c1x) in
+        let () = print_endline (string_of_int y) in
+        let () = change_to_ship grid id (abs (c1y - c2y) + 1) (c1x, y) in
         ()
       done
     else if c1y > c2y then
       for y = c2y to c1y + 1 do
-        let () = change_to_ship grid id (abs (c1y - c2y)) (y, c1x) in
+        let () = change_to_ship grid id (abs (c1y - c2y) + 1) (c1x, y) in
         ()
       done
     else
-      let () = print_string "Something went wrong in set_ships." in
+      let () = print_endline "Something went wrong in set_ships." in
       ()
+  else
+    let () = print_endline "The coordinates are not valid." in
+    ()
