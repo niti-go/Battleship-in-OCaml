@@ -43,15 +43,18 @@ let test_get_ships _ =
   assert_equal [ 2; 3; 4; 5 ] (get_ships 28)
 
 let test_change_state _ =
-  let testing_grid = create_board 5 in
-  let change = change_state testing_grid Miss "A1" in
+  let change = create_board 5 in
+  let () = change_state change "A1" in
   assert_equal "wx" (string_of_cell change.(0).(0));
-  let change = change_state testing_grid Miss "B1" in
+  let () = change_state change "B1" in
   assert_equal "wx" (string_of_cell change.(0).(1));
-  let change = change_state testing_grid Miss "C1" in
+  let () = change_state change "C1" in
   assert_equal "wx" (string_of_cell change.(0).(2));
-  let change = change_state testing_grid Miss "D1" in
-  assert_equal "wx" (string_of_cell change.(0).(3))
+  let () = change_state change "D1" in
+  assert_equal "wx" (string_of_cell change.(0).(3));
+  (*Check that other cells did not change*)
+  assert_equal "wo" (string_of_cell change.(1).(1));
+  assert_equal "wo" (string_of_cell change.(2).(2))
 
 let test_change_to_ship _ =
   let test_ships = create_board 5 in
