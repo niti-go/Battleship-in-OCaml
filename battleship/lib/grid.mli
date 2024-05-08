@@ -72,7 +72,7 @@ val change_to_ship : t -> int -> int -> int * int -> unit
 
 (* COMPLETED ToDo 7: Change the state of the cell. Example ship -> hit, water ->
    miss.*)
-val change_state : t -> cell -> string -> t
+val change_state : t -> string -> unit
 
 (* ToDo 8: Asks user to place the ships (using get_ships) and change the
    necessary cells on the grid to "ship". (Call validate_ships to validate
