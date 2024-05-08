@@ -34,7 +34,8 @@ let string_of_cell = function
 let create_board size =
   if size < 5 || size > 26 then
     invalid_arg "Board size must be between 5 and 26";
-  Array.make size (Array.make size Water)
+  (* Array.make size (Array.make size Water) *)
+  Array.init size (fun _ -> Array.init size (fun _ -> Water))
 (* List.init size (fun _ -> List.init size (fun _ -> string_of_cell Water)) *)
 
 (* Function to print the entire grid with row and column labels *)
@@ -243,22 +244,31 @@ let is_sunk coord ship_id grid =
 (* TODO 7 COMPLETED *)
 (*Changes the state of a cell, either upon a player hitting the cell, or upon
   positioning initial ships at the beginning of the game.*)
-let change_state grid state coordinate =
+(*This is more of updating a cell, once a player has tried to hit it.*)
+let change_state (grid : t) (coordinate : string) =
   let row, col = coordinates coordinate in
-  Array.mapi
-    (fun x row_cell ->
-      if x = row then
-        Array.mapi
-          (fun y col_cell -> if y = col then state else col_cell)
-          row_cell
-      else row_cell)
-    grid
+  match grid.(row).(col) with
+  | Water -> grid.(row).(col) <- Miss
+  | Miss -> grid.(row).(col) <- Miss
+  | Ship { id; length } ->
+      grid.(row).(col) <- Hit { id; length };
+      if is_sunk coordinate id grid = true then grid.(row).(col) <- Destroyed
+      else ()
+  | Destroyed -> ()
+  | Hidden -> ()
+  | Hit _ -> ()
+(* let row, col = coordinates coordinate in Array.mapi (fun x row_cell -> if x =
+   row then Array.mapi (fun y col_cell -> if y = col then state else col_cell)
+   row_cell else row_cell) grid *)
 
 (*Changes the state of a cell SPECIFICALLY TO A SHIP of ship_id [ship_id]. It
   was previously water,for positioning initial ships at the beginning of the
   game.*)
 let change_to_ship (grid : t) (ship_id : int) (ship_length : int)
     (index : int * int) =
+  (* let row, col = index in Array.mapi (fun x row_cell -> if x = row then
+     Array.mapi (fun y col_cell -> if y = col then Ship { id = ship_id; length =
+     ship_length } else col_cell) row_cell else row_cell) grid *)
   let row, col = index in
   grid.(row).(col) <- Ship { id = ship_id; length = ship_length };
   (*below are print statements for debugging*)
@@ -289,8 +299,9 @@ let set_ships (ship_lengths : int list) (grid : t) =
       ^ string_of_int (List.length ship_lengths)
       ^ "ships left to place.")
   in
+  let id = 1 in
   let c1, c2 = ask_for_coords grid in
-  let is_valid, id = validate_ship c1 c2 grid in
+  let is_valid, ship_length = validate_ship c1 c2 grid in
   if is_valid = true then
     let c1x, c1y = coordinates c1 in
     let c2x, c2y = coordinates c2 in
@@ -301,32 +312,32 @@ let set_ships (ship_lengths : int list) (grid : t) =
       print_endline ("c2x" ^ string_of_int c2x ^ "c2y" ^ string_of_int c2y)
     in
     if c1x < c2x then
-      let ship_length = abs (c1x - c2x) + 1 in
       let () = print_endline "c1x < c2x" in
-      for x = c1x to c2x + 1 do
+      for x = c1x to c2x do
         let () = print_endline (string_of_int x) in
         let () = change_to_ship grid id ship_length (x, c1y) in
         ()
       done
     else if c1x > c2x then
-      for x = c2x to c1x + 1 do
+      for x = c2x to c1x do
         let () = print_endline (string_of_int x) in
-        let () = change_to_ship grid id (abs (c1x - c2x) + 1) (x, c1y) in
+        let () = change_to_ship grid id ship_length (x, c1y) in
         ()
       done
     else if c1y < c2y then
-      for y = c1y to c2y + 1 do
+      for y = c1y to c2y do
         let () = print_endline (string_of_int y) in
-        let () = change_to_ship grid id (abs (c1y - c2y) + 1) (c1x, y) in
+        let () = change_to_ship grid id ship_length (c1x, y) in
         ()
       done
     else if c1y > c2y then
-      for y = c2y to c1y + 1 do
-        let () = change_to_ship grid id (abs (c1y - c2y) + 1) (c1x, y) in
+      for y = c2y to c1y do
+        let () = change_to_ship grid id ship_length (c1x, y) in
         ()
       done
     else
-      let () = print_endline "Something went wrong in set_ships." in
+      (*the ship is length 1 (the 2 coordinates are the same)*)
+      let () = change_to_ship grid id ship_length (c1x, c1y) in
       ()
   else
     let () = print_endline "The coordinates are not valid." in
