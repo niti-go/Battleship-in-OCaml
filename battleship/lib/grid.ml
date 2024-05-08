@@ -277,32 +277,30 @@ let change_to_ship (grid : t) (ship_id : int) (ship_length : int)
    ^ string_of_int col ^ ": ");
   print_grid grid
 
-(*TODO GET RID OF LENGTH PARAMETER FROM VALIDATE_SHIP*)
 let rec ask_for_coords (grid : t) : string * string =
-  print_endline "Enter the top left coordinate of a new ship. (e.g A5): ";
+  print_endline "\nEnter the top left coordinate of a new ship. (e.g A5): ";
   let left_coord = read_line () in
   print_endline "Enter the bottom right coordinate. (e.g C5): ";
   let right_coord = read_line () in
   if String.length left_coord <> 2 || String.length right_coord <> 2 then
-    let () = print_endline "That is not valid. Try again. " in
+    let () = print_endline "Your input is not valid. Try again. " in
     ask_for_coords grid
   else if fst (validate_ship left_coord right_coord grid) = true then
     (left_coord, right_coord)
   else
-    let () = print_endline "That is not valid. Try again. " in
+    let () = print_endline "Your coordinates are not valid. Try again. " in
     ask_for_coords grid
 
-let set_ships (ship_lengths : int list) (grid : t) =
-  let () =
-    print_endline
-      ("You have "
-      ^ string_of_int (List.length ship_lengths)
-      ^ "ships left to place.")
-  in
-  let id = 1 in
+let rec remove_first_element lst1 =
+  match lst1 with
+  | [] -> []
+  | _ :: t -> t
+
+let rec set_one_ship (ship_length : int) (id : int) (grid : t) =
   let c1, c2 = ask_for_coords grid in
-  let is_valid, ship_length = validate_ship c1 c2 grid in
-  if is_valid = true then
+  let is_valid, users_ship_length = validate_ship c1 c2 grid in
+
+  if is_valid = true && users_ship_length = ship_length then
     let c1x, c1y = coordinates c1 in
     let c2x, c2y = coordinates c2 in
     let () =
@@ -340,5 +338,38 @@ let set_ships (ship_lengths : int list) (grid : t) =
       let () = change_to_ship grid id ship_length (c1x, c1y) in
       ()
   else
-    let () = print_endline "The coordinates are not valid." in
-    ()
+    let () =
+      print_endline
+        "The coordinates do not form a valid ship of the required length."
+    in
+    set_one_ship ship_length id grid
+
+let rec set_ships_given_ids (ship_lengths : int list) (ship_ids : int list)
+    (grid : t) =
+  if ship_lengths = [] then ()
+  else
+    let () =
+      print_string
+        ("\nYou have "
+        ^ string_of_int (List.length ship_lengths)
+        ^ " ships left to place of length(s): ")
+    in
+    let () =
+      List.iter print_string
+        (List.map (fun x -> string_of_int x ^ " ") ship_lengths)
+    in
+
+    let first_length = List.hd ship_lengths in
+    let id = List.hd ship_ids in
+    let () =
+      print_string
+        ("To place your ship of length " ^ string_of_int first_length ^ ": ")
+    in
+    set_one_ship first_length id grid;
+    let new_ship_lengths = remove_first_element ship_lengths in
+    let new_ship_ids = remove_first_element ship_ids in
+    set_ships_given_ids new_ship_lengths new_ship_ids grid
+
+let set_ships (ship_lengths : int list) (grid : t) =
+  let ship_ids = List.mapi (fun x _ -> x) ship_lengths in
+  set_ships_given_ids ship_lengths ship_ids grid
