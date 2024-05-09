@@ -23,7 +23,7 @@ let switch_player state =
 let rec main_loop state =
   print_endline
     "Enter 'otherboard' to view the opponent's board, 'nextplayer' to switch \
-     player, 'exit' to quit, or 'show' to see your board:";
+     player, 'show' to see your board, 'play' to start your turn, or 'exit' to quit:";
   match read_line () with
   | "otherboard" ->
       print_their_board state.opponent.board;
@@ -33,6 +33,9 @@ let rec main_loop state =
       main_loop state
   | "show" ->
       print_grid state.current_player.board;
+      main_loop state
+  | "play" ->
+      print_endline "Exiting game.";
       main_loop state
   | "exit" ->
       print_endline "Exiting game.";
@@ -71,4 +74,5 @@ let rec enter_size () =
 
 let () =
   let game_state = enter_size () in
+  print_endline ("It's now " ^ game_state.current_player.name ^ "'s turn.");
   main_loop game_state
