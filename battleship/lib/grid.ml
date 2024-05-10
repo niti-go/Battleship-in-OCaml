@@ -91,7 +91,7 @@ let print_their_board (board : t) =
   in
   print_grid masked_board (* Reuse print_grid function *)
 
-(** [coordinates "A5" returns a tuple containing the pair "4,0" i.e. (row index, col index) (x = 0, y = 4)]*)
+(** [coordinates str] "A5" returns a tuple containing the pair "4,0" i.e. (row index, col index) (x = 0, y = 4)*)
 let coordinates (str : string) =
   let col = String.get str 0 in
   (* This gets the letter *)
@@ -155,6 +155,8 @@ let validate_ship coord1 coord2 (grid : t) =
   then (false, 0)
   else if c1x = c2x then
     let length = abs (c2y - c1y) + 1 in
+    if c2y < c1y then (false, length) 
+    else
     let tmp = Array.make length Water in
     (*gets the specific location we are looking at*)
     (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
@@ -174,6 +176,7 @@ let validate_ship coord1 coord2 (grid : t) =
       length )
   else if c1y = c2y then
     let length = abs (c2x - c1x) + 1 in
+    if c2x < c1x then (false, length) else
     let tmp = Array.make length Water in
     (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
     let () =
