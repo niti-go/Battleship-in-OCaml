@@ -196,32 +196,29 @@ let validate_ship coord1 coord2 (grid : t) =
 
 (*TODO 4 COMPLETED *)
 let hit_ship coord ship_id grid =
+  (* change_state *)
   let row_index, col_index = coordinates coord in
   let hit_coords = ref [] in
+
+  let check_if_hit cell row_index col_index =
+    match cell with
+    | Hit { id = curr_id; length = _ } when curr_id = ship_id ->
+        if not (List.mem (row_index, col_index) !hit_coords) then
+          hit_coords := (row_index, col_index) :: !hit_coords
+    | _ -> ()
+  in
+
   (* Function that loops through the row of the given coordinate *)
   let check_row grid =
-    let row = Array.get grid row_index in
-    (* Access the cell in the specified column *)
     Array.iteri
-      (fun col_index cell ->
-        match cell with
-        | Hit { id = curr_id; length = _ } when curr_id = ship_id ->
-            if not (List.mem (row_index, col_index) !hit_coords) then
-              hit_coords := (row_index, col_index) :: !hit_coords
-        | _ -> ())
-      row
+      (fun col_index cell -> check_if_hit cell row_index col_index)
+      grid.(row_index)
   in
 
   (* Function that loops through the column of the given coordinate *)
   let check_col grid =
     Array.iteri
-      (fun row_index row ->
-        let cell = row.(col_index) in
-        match cell with
-        | Hit { id = curr_id; length = _ } when curr_id = ship_id ->
-            if not (List.mem (row_index, col_index) !hit_coords) then
-              hit_coords := (row_index, col_index) :: !hit_coords
-        | _ -> ())
+      (fun row_index row -> check_if_hit row.(col_index) row_index col_index)
       grid
   in
 
