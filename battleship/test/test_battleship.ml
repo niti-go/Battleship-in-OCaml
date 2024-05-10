@@ -59,7 +59,9 @@ let test_change_state _ =
 let test_change_to_ship _ =
   let test_ships = create_board 5 in
   let new_ship_4 = change_to_ship test_ships 1 4 (0, 0) in
-  assert_equal "so" (string_of_cell test_ships.(0).(0))
+  assert_equal "so" (string_of_cell test_ships.(0).(0));
+  let new_ship_3 = change_to_ship test_ships 2 3 (3, 0) in
+  assert_equal "so" (string_of_cell test_ships.(3).(0))
 
 (* change_to_ship must be further implemented. *)
 
