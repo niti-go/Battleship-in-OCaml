@@ -64,30 +64,6 @@ let test_change_to_ship _ =
   let () = change_to_ship test_ships 2 3 (3, 0) in
   assert_equal "so" (string_of_cell test_ships.(3).(0))
 
-(* change_to_ship must be further implemented. *)
-
-(* let test_print_grid _ = let test_print_their_board _ = *)
-
-(* UNFINSHED: cannot test hit_ship without set_ships *)
-(* let example_grid = set_ships [ 4; 3; 3; 2 ] (create_board 5) *)
-
-(* let () = print_endline "Printing..."; let example_grid = create_board 5 in
-   let () = print_grid example_grid in let () = change_to_ship example_grid 1 4
-   (0, 0) in let () = print_grid example_grid in
-
-   let () = change_to_ship example_grid 1 4 (1, 0) in let () = print_grid
-   example_grid in
-
-   let () = change_to_ship example_grid 1 4 (2, 0) in let () = print_grid
-   example_grid in
-
-   let () = change_to_ship example_grid 1 4 (3, 0) in let () = print_grid
-   example_grid in
-
-   print_endline "DONE Printing...";
-
-   () *)
-
 let example_grid = create_board 5
 let () = change_to_ship example_grid 1 4 (0, 0)
 let () = change_to_ship example_grid 1 4 (1, 0)
