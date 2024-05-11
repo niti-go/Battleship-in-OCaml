@@ -23,9 +23,10 @@ let switch_player state =
 
   (*need to verify user input further - what if they put CC or 55. C0 case is taken care of in validate ships*)
   let rec ask_for_coords (grid : t) (current_player : player): string * string =
-  print_endline "\nEnter the top left coordinate of a new ship. (e.g A5): ";
+    print_endline "\nRules - Ship must be only vertical or horizontal and cannot be placed outside of grid.";
+  print_endline "\nEnter the top/left coordinate of a new ship. (e.g A5): ";
   let left_coord = read_line () in
-  print_endline "Enter the bottom right coordinate. (e.g C5): ";
+  print_endline "Enter the bottom/right coordinate. (e.g C5): ";
   let right_coord = read_line () in
   if String.length left_coord <> 2 || String.length right_coord <> 2 then
     let () = print_endline "Your input is not valid. Try again. " in
@@ -52,9 +53,15 @@ let rec main_loop state =
   | "show" ->
       print_grid state.current_player.board;
       main_loop state
-  | "play" ->
-      print_endline "Exiting game.";
-      main_loop state
+  | "play" -> begin 
+        let () = if state.current_player.is_ships_set = true then 
+          print_endline "player gonna play"
+        else
+        let (start, ending) = ask_for_coords state.current_player.board state.current_player in
+        print_endline ("start coords: " ^ start ^ "end coords: " ^ ending )
+        in 
+        main_loop state
+  end
   | "exit" ->
       print_endline "Exiting game.";
       exit 0
