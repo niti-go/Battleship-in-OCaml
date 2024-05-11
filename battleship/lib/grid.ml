@@ -91,7 +91,8 @@ let print_their_board (board : t) =
   in
   print_grid masked_board (* Reuse print_grid function *)
 
-(** [coordinates str] "A5" returns a tuple containing the pair "4,0" i.e. (row index, col index) (x = 0, y = 4)*)
+(** [coordinates str] "A5" returns a tuple containing the pair "4,0" i.e. (row
+    index, col index) (x = 0, y = 4)*)
 let coordinates (str : string) =
   let col = String.get str 0 in
   (* This gets the letter *)
@@ -155,43 +156,44 @@ let validate_ship coord1 coord2 (grid : t) =
   then (false, 0)
   else if c1x = c2x then
     let length = abs (c2y - c1y) + 1 in
-    if c2y < c1y then (false, length) 
+    if c2y < c1y then (false, length)
     else
-    let tmp = Array.make length Water in
-    (*gets the specific location we are looking at*)
-    (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
-    let () =
-      for x = 0 to length - 1 do
-        tmp.(x) <- grid.(c1x).(c1y + x)
-      done
-    in
-    (* returns whether ship valid and calculated length *)
-    ( Array.for_all
-        (fun x ->
-          match x with
-          | Ship _ -> false
-          | Destroyed -> false
-          | _ -> true)
-        tmp,
-      length )
+      let tmp = Array.make length Water in
+      (*gets the specific location we are looking at*)
+      (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
+      let () =
+        for x = 0 to length - 1 do
+          tmp.(x) <- grid.(c1x).(c1y + x)
+        done
+      in
+      (* returns whether ship valid and calculated length *)
+      ( Array.for_all
+          (fun x ->
+            match x with
+            | Ship _ -> false
+            | Destroyed -> false
+            | _ -> true)
+          tmp,
+        length )
   else if c1y = c2y then
     let length = abs (c2x - c1x) + 1 in
-    if c2x < c1x then (false, length) else
-    let tmp = Array.make length Water in
-    (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
-    let () =
-      for x = 0 to length - 1 do
-        tmp.(x) <- grid.(c1x + x).(c1y)
-      done
-    in
-    ( Array.for_all
-        (fun x ->
-          match x with
-          | Ship _ -> false
-          | Destroyed -> false
-          | _ -> true)
-        tmp,
-      abs (c2x - c1x) + 1 )
+    if c2x < c1x then (false, length)
+    else
+      let tmp = Array.make length Water in
+      (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
+      let () =
+        for x = 0 to length - 1 do
+          tmp.(x) <- grid.(c1x + x).(c1y)
+        done
+      in
+      ( Array.for_all
+          (fun x ->
+            match x with
+            | Ship _ -> false
+            | Destroyed -> false
+            | _ -> true)
+          tmp,
+        abs (c2x - c1x) + 1 )
   else (false, 0)
 
 (*TODO 4 COMPLETED *)
@@ -270,17 +272,15 @@ let change_to_ship (grid : t) (ship_id : int) (ship_length : int)
      Array.mapi (fun y col_cell -> if y = col then Ship { id = ship_id; length =
      ship_length } else col_cell) row_cell else row_cell) grid *)
   let row, col = index in
-  grid.(row).(col) <- Ship { id = ship_id; length = ship_length };
-  (*below are print statements for debugging*)
-  print_endline
-    ("changing row " ^ string_of_int row ^ "and changing column "
-   ^ string_of_int col ^ ": ");
-  print_grid grid
+  grid.(row).(col) <- Ship { id = ship_id; length = ship_length }
+(*below are print statements for debugging*)
+(* print_endline ("Changing row " ^ string_of_int row ^ " and changing column "
+   ^ string_of_int col ^ ": "); print_grid grid *)
 
 let rec ask_for_coords (grid : t) : string * string =
-  print_endline "\nEnter the top left coordinate of a new ship. (e.g A5): ";
+  print_endline "\nEnter the top/left coordinate of a new ship. (e.g A5): ";
   let left_coord = read_line () in
-  print_endline "Enter the bottom right coordinate. (e.g C5): ";
+  print_endline "Enter the bottom/right coordinate. (e.g C5):";
   let right_coord = read_line () in
   if String.length left_coord <> 2 || String.length right_coord <> 2 then
     let () = print_endline "Your input is not valid. Try again. " in
@@ -291,7 +291,7 @@ let rec ask_for_coords (grid : t) : string * string =
     let () = print_endline "Your coordinates are not valid. Try again. " in
     ask_for_coords grid
 
-let rec remove_first_element lst1 =
+let remove_first_element lst1 =
   match lst1 with
   | [] -> []
   | _ :: t -> t
@@ -303,28 +303,25 @@ let rec set_one_ship (ship_length : int) (id : int) (grid : t) =
   if is_valid = true && users_ship_length = ship_length then
     let c1x, c1y = coordinates c1 in
     let c2x, c2y = coordinates c2 in
-    let () =
-      print_endline ("c1x" ^ string_of_int c1x ^ "c1y" ^ string_of_int c1y)
-    in
-    let () =
-      print_endline ("c2x" ^ string_of_int c2x ^ "c2y" ^ string_of_int c2y)
-    in
+    (*getting rid of debugging code i think*)
+    (* let () = print_endline ("c1x" ^ string_of_int c1x ^ "c1y" ^ string_of_int
+       c1y) in let () = print_endline ("c2x" ^ string_of_int c2x ^ "c2y" ^
+       string_of_int c2y) in *)
     if c1x < c2x then
-      let () = print_endline "c1x < c2x" in
       for x = c1x to c2x do
-        let () = print_endline (string_of_int x) in
+        (* let () = print_endline (string_of_int x) in *)
         let () = change_to_ship grid id ship_length (x, c1y) in
         ()
       done
     else if c1x > c2x then
       for x = c2x to c1x do
-        let () = print_endline (string_of_int x) in
+        (* let () = print_endline (string_of_int x) in *)
         let () = change_to_ship grid id ship_length (x, c1y) in
         ()
       done
     else if c1y < c2y then
       for y = c1y to c2y do
-        let () = print_endline (string_of_int y) in
+        (* let () = print_endline (string_of_int y) in *)
         let () = change_to_ship grid id ship_length (c1x, y) in
         ()
       done
@@ -340,14 +337,21 @@ let rec set_one_ship (ship_length : int) (id : int) (grid : t) =
   else
     let () =
       print_endline
-        "The coordinates do not form a valid ship of the required length."
+        ("The coordinates do not form a valid ship of the required length of "
+       ^ string_of_int ship_length)
     in
     set_one_ship ship_length id grid
 
 let rec set_ships_given_ids (ship_lengths : int list) (ship_ids : int list)
     (grid : t) =
-  if ship_lengths = [] then ()
+  if List.length ship_lengths = 0 then ()
   else
+    let () =
+      print_endline
+        "\n\
+         Rules - Ship must be only vertical or horizontal, cannot be placed \
+         outside of grid, and cannot overlap another ship."
+    in
     let () =
       print_string
         ("\nYou have "
@@ -363,9 +367,11 @@ let rec set_ships_given_ids (ship_lengths : int list) (ship_ids : int list)
     let id = List.hd ship_ids in
     let () =
       print_string
-        ("To place your ship of length " ^ string_of_int first_length ^ ": ")
+        ("\nTo place your ship of length " ^ string_of_int first_length ^ ": ")
     in
-    set_one_ship first_length id grid;
+    let () = set_one_ship first_length id grid in
+    let () = print_endline "" in
+    let () = print_grid grid in
     let new_ship_lengths = remove_first_element ship_lengths in
     let new_ship_ids = remove_first_element ship_ids in
     set_ships_given_ids new_ship_lengths new_ship_ids grid

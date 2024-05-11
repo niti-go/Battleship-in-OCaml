@@ -5,7 +5,7 @@ open Battleship.Grid
 type player = {
   name : string;
   board : t;
-  mutable is_ships_set: bool
+  mutable is_ships_set : bool;
 }
 
 type game_state = {
@@ -13,7 +13,8 @@ type game_state = {
   mutable opponent : player;
 }
 
-let create_player name size = { name; board = create_board size; is_ships_set = false}
+let create_player name size =
+  { name; board = create_board size; is_ships_set = false }
 
 let switch_player state =
   let temp = state.current_player in
@@ -21,28 +22,26 @@ let switch_player state =
   state.opponent <- temp;
   print_endline ("It's now " ^ state.current_player.name ^ "'s turn.")
 
-  (*need to verify user input further - what if they put CC or 55. C0 case is taken care of in validate ships*)
-  let rec ask_for_coords (grid : t) (current_player : player): string * string =
-    print_endline "\nRules - Ship must be only vertical or horizontal and cannot be placed outside of grid.";
-  print_endline "\nEnter the top/left coordinate of a new ship. (e.g A5): ";
-  let left_coord = read_line () in
-  print_endline "Enter the bottom/right coordinate. (e.g C5): ";
-  let right_coord = read_line () in
-  if String.length left_coord <> 2 || String.length right_coord <> 2 then
-    let () = print_endline "Your input is not valid. Try again. " in
-    ask_for_coords grid current_player
-  else if fst (validate_ship left_coord right_coord grid) = true then
-    let () = current_player.is_ships_set <- true in
-    (left_coord, right_coord)
-  else
-    let () = print_endline "Your coordinates are not valid. Try again. " in
-    ask_for_coords grid current_player
-
+(*need to verify user input further - what if they put CC or 55. C0 case is
+  taken care of in validate ships*)
+(* let rec ask_for_coords (grid : t) (current_player : player) : string * string
+   = print_endline "\n\ Rules - Ship must be only vertical or horizontal and
+   cannot be placed \ outside of grid."; print_endline "\nEnter the top/left
+   coordinate of a new ship. (e.g A5): "; let left_coord = read_line () in
+   print_endline "Enter the bottom/right coordinate. (e.g C5): "; let
+   right_coord = read_line () in if String.length left_coord <> 2 ||
+   String.length right_coord <> 2 then let () = print_endline "Your input is not
+   valid. Try again. " in ask_for_coords grid current_player else if fst
+   (validate_ship left_coord right_coord grid) = true then let () =
+   current_player.is_ships_set <- true in (left_coord, right_coord) else let ()
+   = print_endline "Your coordinates are not valid. Try again. " in
+   ask_for_coords grid current_player *)
 
 let rec main_loop state =
   print_endline
     "Enter 'otherboard' to view the opponent's board, 'nextplayer' to switch \
-     player, 'show' to see your board, 'play' to start your turn, or 'exit' to quit:";
+     player, 'show' to see your board, 'play' to start your turn, or 'exit' to \
+     quit:";
   match read_line () with
   | "otherboard" ->
       print_their_board state.opponent.board;
@@ -53,15 +52,21 @@ let rec main_loop state =
   | "show" ->
       print_grid state.current_player.board;
       main_loop state
-  | "play" -> begin 
-        let () = if state.current_player.is_ships_set = true then 
+      (*need to modify so each player gets one turn. currently player 1 can play
+        multiple turns before giving it to other. play should loop until
+        someones wins or quit, this should actually be hit*)
+  | "play" -> begin
+      let () =
+        if state.current_player.is_ships_set = true then
           print_endline "player gonna play"
         else
-        let (start, ending) = ask_for_coords state.current_player.board state.current_player in
-        print_endline ("start coords: " ^ start ^ "end coords: " ^ ending )
-        in 
-        main_loop state
-  end
+          set_ships
+            (get_ships (Array.length state.current_player.board))
+            state.current_player.board;
+        state.current_player.is_ships_set <- true
+      in
+      main_loop state
+    end
   | "exit" ->
       print_endline "Exiting game.";
       exit 0

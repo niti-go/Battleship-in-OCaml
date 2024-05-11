@@ -45,10 +45,10 @@ val get_ships : int -> int list
 (** [get_ships size] takes in the size of the board and determines a list of
     ships that the user must place and what lengths they should be. *)
 
-(* ToDo 3: take in the two coordinates and the grid and
-   return true if all three hold and false if otherwise: 1) is not diagonal
-   (either x value has to be the same on both or y) 2) does not overlap a pre
-   existing ship 3) doesn't go out of bounds. *)
+(* ToDo 3: take in the two coordinates and the grid and return true if all three
+   hold and false if otherwise: 1) is not diagonal (either x value has to be the
+   same on both or y) 2) does not overlap a pre existing ship 3) doesn't go out
+   of bounds. *)
 
 val validate_ship : string -> string -> t -> bool * int
 
