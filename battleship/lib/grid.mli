@@ -11,7 +11,11 @@ type cell =
       id : int;
       length : int;
     }
-  | Destroyed (* destroyed = sunk *)
+  | Destroyed of {
+      id : int;
+      length : int;
+    }
+    (* destroyed = sunk *)
   | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
 
 (** Type representing the different possible states of a cell in the game grid *)
@@ -58,7 +62,7 @@ val validate_ship : string -> string -> t -> bool * int
    list of cells) if 1) it has the same ship id 2) is hit. This returns a list
    of other ship cells of that same ID that have been hit. TAKES IN COORDINATE,
    GRID, AND SHIP ID*)
-val hit_ship : string -> int -> t -> (int * int) list
+val hit_ships : string -> int -> t -> (int * int) list
 
 (* COMPLETED ToDo 5: Returns true if length of "hit list" is length of ship ID
    list (number of ships of that ID), false if otherwise. This means that the

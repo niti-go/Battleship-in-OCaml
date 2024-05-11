@@ -18,7 +18,11 @@ type cell =
       id : int;
       length : int;
     }
-  | Destroyed (* destroyed = sunk *)
+  | Destroyed of {
+      id : int;
+      length : int;
+    }
+    (* destroyed = sunk *)
   | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
 
 type t = cell array array
@@ -28,7 +32,7 @@ let string_of_cell = function
   | Miss -> "wx"
   | Ship _ -> "so" (* Ignoring id and length *)
   | Hit _ -> "sx" (* Ignoring id and length *)
-  | Destroyed -> "sxx"
+  | Destroyed _ -> "sxx" (* Ignoring id and length *)
   | Hidden -> "."
 
 let create_board size =
@@ -85,7 +89,7 @@ let print_their_board (board : t) =
            match cell with
            | Hit _ -> cell
            | Miss -> cell
-           | Destroyed -> cell (* Misses and hits remain visible *)
+           | Destroyed _ -> cell (* Misses and hits remain visible *)
            | _ -> Hidden (* Hide water and ships not hit *)))
       board
   in
@@ -171,7 +175,7 @@ let validate_ship coord1 coord2 (grid : t) =
           (fun x ->
             match x with
             | Ship _ -> false
-            | Destroyed -> false
+            | Destroyed _ -> false
             | _ -> true)
           tmp,
         length )
@@ -190,14 +194,14 @@ let validate_ship coord1 coord2 (grid : t) =
           (fun x ->
             match x with
             | Ship _ -> false
-            | Destroyed -> false
+            | Destroyed _ -> false
             | _ -> true)
           tmp,
         abs (c2x - c1x) + 1 )
   else (false, 0)
 
 (*TODO 4 COMPLETED *)
-let hit_ship coord ship_id grid =
+let hit_ships coord ship_id grid =
   (* change_state *)
   let row_index, col_index = coordinates coord in
   let hit_coords = ref [] in
@@ -205,6 +209,9 @@ let hit_ship coord ship_id grid =
   let check_if_hit cell row_index col_index =
     match cell with
     | Hit { id = curr_id; length = _ } when curr_id = ship_id ->
+        if not (List.mem (row_index, col_index) !hit_coords) then
+          hit_coords := (row_index, col_index) :: !hit_coords
+    | Destroyed { id = curr_id; length = _ } when curr_id = ship_id ->
         if not (List.mem (row_index, col_index) !hit_coords) then
           hit_coords := (row_index, col_index) :: !hit_coords
     | _ -> ()
@@ -234,7 +241,7 @@ let hit_ship coord ship_id grid =
 
 (*TODO 5 COMPLETED *)
 let is_sunk coord ship_id grid =
-  let hit_coords = hit_ship coord ship_id grid in
+  let hit_coords = hit_ships coord ship_id grid in
   Array.exists
     (fun row ->
       Array.exists
@@ -257,9 +264,10 @@ let change_state (grid : t) (coordinate : string) =
   | Miss -> grid.(row).(col) <- Miss
   | Ship { id; length } ->
       grid.(row).(col) <- Hit { id; length };
-      if is_sunk coordinate id grid = true then grid.(row).(col) <- Destroyed
+      if is_sunk coordinate id grid = true then
+        grid.(row).(col) <- Destroyed { id; length }
       else ()
-  | Destroyed -> ()
+  | Destroyed _ -> ()
   | Hidden -> ()
   | Hit _ -> ()
 (* let row, col = coordinates coordinate in Array.mapi (fun x row_cell -> if x =
