@@ -273,10 +273,9 @@ let change_to_ship (grid : t) (ship_id : int) (ship_length : int)
      ship_length } else col_cell) row_cell else row_cell) grid *)
   let row, col = index in
   grid.(row).(col) <- Ship { id = ship_id; length = ship_length }
-(*below are print statements for debugging*)
-(* print_endline ("Changing row " ^ string_of_int row ^ " and changing column "
-   ^ string_of_int col ^ ": "); print_grid grid *)
 
+(*need to verify user input further - what if they put CC or 55. C0 case is
+  taken care of in validate ships*)
 let rec ask_for_coords (grid : t) : string * string =
   print_endline "\nEnter the top/left coordinate of a new ship. (e.g A5): ";
   let left_coord = read_line () in
