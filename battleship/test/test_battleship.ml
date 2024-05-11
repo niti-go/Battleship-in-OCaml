@@ -108,8 +108,6 @@ let rec print_tuples = function
       Printf.printf "%i, %i; " x y;
       print_tuples t
 
-(* WORKING ON *)
-(* doesn't rturn ships in order and adds the coordinates twice???. *)
 let test_hit_ship _ =
   let () = change_state example_grid "A1" in
   (* print_tuples (hit_ship "A1" 1 example_grid); *)
@@ -118,11 +116,11 @@ let test_hit_ship _ =
   (* print_tuples (hit_ship "A2" 1 example_grid); *)
   assert_equal [ (0, 0); (1, 0) ] (hit_ship "A2" 1 example_grid);
   let () = change_state example_grid "A3" in
-  print_grid example_grid;
-  print_tuples (hit_ship "A3" 1 example_grid);
-  assert_equal [ (1, 0); (0, 0); (2, 0) ] (hit_ship "A3" 1 example_grid);
-  (* print_tuples (hit_ship "A4" 1 example_grid); assert_equal [ (1, 0); (0, 0);
-     (2, 0); (2, 0); (1, 0); (0, 0) ] (hit_ship "A4" 1 example_grid); *)
+  (* print_grid example_grid; *)
+  (* print_tuples (hit_ship "A3" 1 example_grid); *)
+  assert_equal [ (0, 0); (1, 0); (2, 0) ] (hit_ship "A3" 1 example_grid);
+  print_tuples (hit_ship "A4" 1 example_grid);
+  assert_equal [ (0, 0); (1, 0); (2, 0) ] (hit_ship "A4" 1 example_grid);
   assert_equal [] (hit_ship "B2" 2 example_grid)
 
 (* WORKING ON *)

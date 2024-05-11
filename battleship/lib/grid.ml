@@ -227,7 +227,10 @@ let hit_ship coord ship_id grid =
   check_row grid;
   check_col grid;
 
-  !hit_coords
+  (* Sort list let result = List.sort compare !hit_coords in *)
+
+  (* Delete duplicates and sort list*)
+  List.sort_uniq compare !hit_coords
 
 (*TODO 5 COMPLETED *)
 let is_sunk coord ship_id grid =
