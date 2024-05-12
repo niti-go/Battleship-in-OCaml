@@ -27,14 +27,13 @@ let switch_player state =
 
 let rec main_loop state =
   print_endline
-    "Enter 'otherboard' to view the opponent's board, 'nextplayer' to switch \
-     player, 'show' to see your board, 'play' to start your turn, or 'exit' to \
-     quit:";
+    "Enter 'other' to view the opponent's board, 'next' to switch player, \
+     'show' to see your board, 'play' to start your turn, or 'exit' to quit:";
   match read_line () with
-  | "otherboard" ->
+  | "other" ->
       print_their_board state.opponent.board;
       main_loop state
-  | "nextplayer" ->
+  | "next" ->
       switch_player state;
       main_loop state
   | "show" ->

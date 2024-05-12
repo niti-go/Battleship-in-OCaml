@@ -32,8 +32,8 @@ let string_of_cell = function
   | Miss -> "wx"
   | Ship _ -> "so" (* Ignoring id and length *)
   | Hit _ -> "sx" (* Ignoring id and length *)
-  | Destroyed _ -> "sxx" (* Ignoring id and length *)
-  | Hidden -> "."
+  | Destroyed _ -> "ss" (* Ignoring id and length *)
+  | Hidden -> ". "
 
 let create_board size =
   if size < 5 || size > 26 then
@@ -60,7 +60,8 @@ let print_grid (grid : t) =
     (fun i row ->
       ANSITerminal.print_string
         [ ANSITerminal.on_default ]
-        (string_of_int (i + 1) ^ "  ");
+        (if i >= 9 then string_of_int (i + 1) ^ "  "
+         else "0" ^ string_of_int (i + 1) ^ "  ");
       (* Print row number with padding *)
       Array.iter
         (fun cell ->
@@ -141,64 +142,64 @@ let get_ships size =
   valid?*)
 (* Should always be in the form where coord1 is leftmost/topmost coordinate and
    coord2 is rightmost/lowest coordinate*)
-(*TODO INSTEAD OF TAKING IN LENGTH, RETURN A TUPLE (bool, length) WHERE IF THE
-  SHIP IS VALID, RETURN THE LENGTH OF THE SHIP*)
 let validate_ship coord1 coord2 (grid : t) =
-  let c1x, c1y = coordinates coord1 in
-  let c2x, c2y = coordinates coord2 in
-  (*checks if ship is out of bounds, then diagonal*)
-  if
-    c1x < 0
-    || c1x >= Array.length grid.(0)
-    || c2x < 0
-    || c2x >= Array.length grid.(0)
-    || c1y < 0
-    || c1y >= Array.length grid
-    || c2y < 0
-    || c2y >= Array.length grid
-    (*using dummy length*)
-  then (false, 0)
-  else if c1x = c2x then
-    let length = abs (c2y - c1y) + 1 in
-    if c2y < c1y then (false, length)
-    else
-      let tmp = Array.make length Water in
-      (*gets the specific location we are looking at*)
-      (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
-      let () =
-        for x = 0 to length - 1 do
-          tmp.(x) <- grid.(c1x).(c1y + x)
-        done
-      in
-      (* returns whether ship valid and calculated length *)
-      ( Array.for_all
-          (fun x ->
-            match x with
-            | Ship _ -> false
-            | Destroyed _ -> false
-            | _ -> true)
-          tmp,
-        length )
-  else if c1y = c2y then
-    let length = abs (c2x - c1x) + 1 in
-    if c2x < c1x then (false, length)
-    else
-      let tmp = Array.make length Water in
-      (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
-      let () =
-        for x = 0 to length - 1 do
-          tmp.(x) <- grid.(c1x + x).(c1y)
-        done
-      in
-      ( Array.for_all
-          (fun x ->
-            match x with
-            | Ship _ -> false
-            | Destroyed _ -> false
-            | _ -> true)
-          tmp,
-        abs (c2x - c1x) + 1 )
-  else (false, 0)
+  try
+    let c1x, c1y = coordinates coord1 in
+    let c2x, c2y = coordinates coord2 in
+    (*checks if ship is out of bounds, then diagonal*)
+    if
+      c1x < 0
+      || c1x >= Array.length grid.(0)
+      || c2x < 0
+      || c2x >= Array.length grid.(0)
+      || c1y < 0
+      || c1y >= Array.length grid
+      || c2y < 0
+      || c2y >= Array.length grid
+      (*using dummy length*)
+    then (false, 0)
+    else if c1x = c2x then
+      let length = abs (c2y - c1y) + 1 in
+      if c2y < c1y then (false, length)
+      else
+        let tmp = Array.make length Water in
+        (*gets the specific location we are looking at*)
+        (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
+        let () =
+          for x = 0 to length - 1 do
+            tmp.(x) <- grid.(c1x).(c1y + x)
+          done
+        in
+        (* returns whether ship valid and calculated length *)
+        ( Array.for_all
+            (fun x ->
+              match x with
+              | Ship _ -> false
+              | Destroyed _ -> false
+              | _ -> true)
+            tmp,
+          length )
+    else if c1y = c2y then
+      let length = abs (c2x - c1x) + 1 in
+      if c2x < c1x then (false, length)
+      else
+        let tmp = Array.make length Water in
+        (*COULD BE PLACE FOR EXCEPTION IF OUT OF BOUNDS*)
+        let () =
+          for x = 0 to length - 1 do
+            tmp.(x) <- grid.(c1x + x).(c1y)
+          done
+        in
+        ( Array.for_all
+            (fun x ->
+              match x with
+              | Ship _ -> false
+              | Destroyed _ -> false
+              | _ -> true)
+            tmp,
+          abs (c2x - c1x) + 1 )
+    else (false, 0)
+  with Failure _ -> (false, 0)
 
 (*TODO 4 COMPLETED *)
 let hit_ships coord ship_id grid =
