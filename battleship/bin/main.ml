@@ -1,5 +1,4 @@
 open Battleship.Grid
-
 (**@authors Niti Goyal, Ginger McCoy, Naakai McDonald, Nidhi Soma *)
 
 type player = {
@@ -34,25 +33,73 @@ let rec main_loop state =
       print_their_board state.opponent.board;
       main_loop state
   | "next" ->
-      switch_player state;
-      main_loop state
+      if state.current_player.is_ships_set then (
+        switch_player state;
+        main_loop state)
+      else (
+        print_endline "You must set your ships before switching players.";
+        main_loop state)
   | "show" ->
       print_grid state.current_player.board;
       main_loop state
-      (*need to modify so each player gets one turn. currently player 1 can play
-        multiple turns before giving it to other. play should loop until
-        someones wins or quit, this should actually be hit*)
   | "play" -> begin
-      let () =
-        if state.current_player.is_ships_set = true then
-          print_endline "player gonna play"
-        else
-          set_ships
-            (get_ships (Array.length state.current_player.board))
-            state.current_player.board;
-        state.current_player.is_ships_set <- true
-      in
-      main_loop state
+      if state.current_player.is_ships_set = false then (
+        set_ships
+          (get_ships (Array.length state.current_player.board))
+          state.current_player.board;
+        state.current_player.is_ships_set <- true;
+        main_loop state)
+      else if state.opponent.is_ships_set = false then (
+        print_endline "Waiting for the opponent to set their ships.";
+        main_loop state)
+      else
+        let rec play_turn () =
+          print_endline "Enter the coordinates to attack (e.g., A5):";
+          let coord = read_line () in
+          try
+            let row, col = coordinates coord in
+            if
+              row < 0
+              || row >= Array.length state.opponent.board
+              || col < 0
+              || col >= Array.length state.opponent.board.(0)
+            then (
+              print_endline "Invalid coordinates. Please try again.";
+              play_turn ())
+            else
+              let cell = state.opponent.board.(row).(col) in
+              match cell with
+              | Water ->
+                  change_state state.opponent.board coord;
+                  print_endline "MISS!";
+                  print_their_board state.opponent.board;
+                  switch_player state;
+                  main_loop state
+              | Ship { id; _ } ->
+                  change_state state.opponent.board coord;
+                  print_endline "HIT!";
+                  if is_sunk coord id state.opponent.board then (
+                    print_endline "You sunk a ship!";
+                    incr num_ships_sunk;
+                    if
+                      !num_ships_sunk
+                      = List.length
+                          (get_ships (Array.length state.opponent.board))
+                    then (
+                      print_endline "Congratulations! You won the game!";
+                      exit 0))
+                  else ();
+                  print_their_board state.opponent.board;
+                  switch_player state;
+                  main_loop state
+              | _ ->
+                  print_endline "You already attacked this position.";
+                  play_turn ()
+          with Failure _ ->
+            print_endline "Invalid coordinates. Please try again.";
+            play_turn ()
+        in
+        play_turn ()
     end
   | "exit" ->
       print_endline "Exiting game.";
