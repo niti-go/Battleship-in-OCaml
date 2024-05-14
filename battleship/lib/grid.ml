@@ -293,7 +293,21 @@ let rec ask_for_coords (grid : t) : string * string =
   let left_coord = read_line () in
   print_endline "Enter the bottom/right coordinate. (e.g C5):";
   let right_coord = read_line () in
-  if String.length left_coord <> 2 || String.length right_coord <> 2 then
+  if Array.length grid < 10 then
+    if String.length left_coord <> 2 || String.length right_coord <> 2 then
+      let () = print_endline "Your input is not valid. Try again. " in
+      ask_for_coords grid
+    else if fst (validate_ship left_coord right_coord grid) = true then
+      (left_coord, right_coord)
+    else
+      let () = print_endline "Your coordinates are not valid. Try again. " in
+      ask_for_coords grid
+  else if
+    String.length left_coord < 2
+    || String.length left_coord > 3
+    || String.length left_coord < 2
+    || String.length right_coord > 3
+  then
     let () = print_endline "Your input is not valid. Try again. " in
     ask_for_coords grid
   else if fst (validate_ship left_coord right_coord grid) = true then
