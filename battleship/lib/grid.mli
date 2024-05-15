@@ -90,5 +90,9 @@ val sink_ship : string -> int -> t -> unit
    ship). *)
 
 val set_ships : int list -> t -> unit
-(** [set_ships] asks user to place the ships (using get_ships) and change the
-    necessary cells on the grid to "ship". *)
+(** [set_ships lst grid] asks user to place the ships of the lengths specified
+    in [lst], or randomly places the ships for them, and changes the necessary
+    cells on [grid] to "ship", a.k.a "so". *)
+(* val set_random_ships : int list -> t -> unit (** [set_random_ships lst grid]
+   places random ships of the lengths specified in [lst] by changing the
+   necessary cells on [grid] to "ship", a.k.a "so". *) *)
