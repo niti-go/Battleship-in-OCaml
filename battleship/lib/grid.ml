@@ -281,7 +281,7 @@ let change_state (grid : t) (coordinate : string) =
 let change_state_to_sunk (grid : t) (coordinate : int * int) =
   let row, col = coordinate in
   match grid.(row).(col) with
-  | Ship { id; length } -> grid.(row).(col) <- Destroyed { id; length }
+  | Hit { id; length } -> grid.(row).(col) <- Destroyed { id; length }
   | _ -> ()
 
 (**[sink_ship coord ship_id grid] changes the state of all ship cells in [grid]
