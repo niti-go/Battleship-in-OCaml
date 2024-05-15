@@ -152,10 +152,14 @@ let test_validate_ship _ =
   (* Invalid ship (cooridnates overlap another ship) *);
   assert_equal (false, 0) (validate_ship "A1" "A9" (create_board 7))
 
-(* Invalid ship (coordinates are off the grid) *)
-(* let tuple = validate_ship "A1" "A4" valid_ship_4 in Printf.printf "%b %i"
-   (fst tuple) (snd tuple) *)
-let test_set_ships_invalid_lengths _ =
+let test_validate_ship_off_grid _ =
+  let grid = create_board 7 in
+  assert_equal (false, 0) (validate_ship "A1" "A8" grid);
+  assert_equal (false, 0) (validate_ship "H1" "H3" grid);
+  assert_equal (false, 0) (validate_ship "B0" "D0" grid);
+  assert_equal (false, 0) (validate_ship "E8" "E10" grid)
+
+let test_create_board_creates_empty_grid _ =
   let grid = create_board 5 in
   let expected_grid = create_board 5 in
   (* Compare the expected grid with the actual grid *)
@@ -190,8 +194,10 @@ let test_grid =
          "Tests functionality of is_sunk function." >:: test_is_sunk;
          "Tests functionality of validate_ship function." >:: test_validate_ship;
          "Test set_ships with invalid ship lengths"
-         >:: test_set_ships_invalid_lengths;
+         >:: test_create_board_creates_empty_grid;
          "Test creating a board with invalid size" >:: test_invalid_board_size;
+         "Test validate_ship with coordinates off the grid"
+         >:: test_validate_ship_off_grid;
        ]
 
 let _ = run_test_tt_main test_grid
