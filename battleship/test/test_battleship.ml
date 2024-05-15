@@ -1,7 +1,6 @@
 open OUnit2
 open Battleship.Grid
 open Battleship
-open Unix
 
 let test_string_of_cell _ =
   assert_equal "wo" (string_of_cell Water);
@@ -238,6 +237,109 @@ let test_sink_ship _ =
   assert_equal "ss" (string_of_cell grid.(1).(0));
   assert_equal "ss" (string_of_cell grid.(2).(0))
 
+let test_set_ships_random _ =
+  let grid = create_board 8 in
+  let ships = [ 5; 4; 3; 2 ] in
+
+  (* Simulate user input *)
+  let user_input = "random\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  set_ships ships grid;
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin;
+
+  (* Check if the correct number of ships are placed *)
+  let count_ships grid =
+    Array.fold_left
+      (fun acc row ->
+        Array.fold_left
+          (fun acc cell ->
+            match cell with
+            | Ship _ -> acc + 1
+            | _ -> acc)
+          acc row)
+      0 grid
+  in
+  assert_equal (List.fold_left ( + ) 0 ships) (count_ships grid)
+
+let test_set_ships_invalid_input _ =
+  let grid = create_board 5 in
+  let ships = [ 4; 3; 2 ] in
+
+  (* Simulate invalid user input *)
+  let user_input = "invalid\ncustom\nA1\nA4\nB1\nB3\nC1\nC2\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  set_ships ships grid;
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin;
+
+  (* Check if the ships are set correctly despite invalid input *)
+  assert_equal "so" (string_of_cell grid.(0).(0));
+  assert_equal "so" (string_of_cell grid.(1).(0));
+  assert_equal "so" (string_of_cell grid.(2).(0));
+  assert_equal "so" (string_of_cell grid.(3).(0));
+  assert_equal "so" (string_of_cell grid.(0).(1));
+  assert_equal "so" (string_of_cell grid.(1).(1));
+  assert_equal "so" (string_of_cell grid.(2).(1));
+  assert_equal "wo" (string_of_cell grid.(4).(4))
+
+let test_change_state_hit_ship _ =
+  let grid = create_board 5 in
+  change_to_ship grid 1 3 (0, 0);
+  change_to_ship grid 1 3 (1, 0);
+  change_to_ship grid 1 3 (2, 0);
+  change_state grid "A1";
+  assert_equal "sx" (string_of_cell grid.(0).(0));
+  assert_equal "so" (string_of_cell grid.(1).(0));
+  assert_equal "so" (string_of_cell grid.(2).(0))
+
+let test_change_state_miss _ =
+  let grid = create_board 5 in
+  change_state grid "A1";
+  assert_equal "wx" (string_of_cell grid.(0).(0));
+  assert_equal "wo" (string_of_cell grid.(1).(0));
+  assert_equal "wo" (string_of_cell grid.(2).(0))
+
+let test_validate_ship_valid_horizontal _ =
+  assert_equal (true, 3) (validate_ship "C1" "E1" (create_board 7))
+
+let test_validate_ship_valid_vertical _ =
+  assert_equal (true, 3) (validate_ship "A3" "A5" (create_board 7))
+
+let test_validate_ship_invalid_out_of_bounds _ =
+  assert_equal (false, 0) (validate_ship "A1" "A10" (create_board 7))
+
+let test_validate_ship_invalid_diagonal _ =
+  assert_equal (false, 0) (validate_ship "A1" "C3" (create_board 7))
+
+let test_validate_ship_invalid_same_coordinates _ =
+  assert_equal (false, 0) (validate_ship "A1" "A1" (create_board 7))
+
+let test_create_board_different_sizes _ =
+  assert_equal (Array.make_matrix 10 10 Water) (create_board 10);
+  assert_equal (Array.make_matrix 20 20 Water) (create_board 20);
+  assert_equal (Array.make_matrix 25 25 Water) (create_board 25)
+
 let test_grid =
   "tests functionality of grid module"
   >::: [
@@ -267,6 +369,22 @@ let test_grid =
          >:: test_allowed_turn;
          "Test allowed_turn with different board size"
          >:: test_allowed_turn_diff_board;
+         "Test set_ships with random input" >:: test_set_ships_random;
+         "Test set_ships with invalid input" >:: test_set_ships_invalid_input;
+         "Test change_state with hit ship" >:: test_change_state_hit_ship;
+         "Test change_state with miss" >:: test_change_state_miss;
+         "Test validate_ship with valid horizontal ship"
+         >:: test_validate_ship_valid_horizontal;
+         "Test validate_ship with valid vertical ship"
+         >:: test_validate_ship_valid_vertical;
+         "Test validate_ship with invalid out of bounds ship"
+         >:: test_validate_ship_invalid_out_of_bounds;
+         "Test validate_ship with invalid diagonal ship"
+         >:: test_validate_ship_invalid_diagonal;
+         "Test validate_ship with invalid same coordinates"
+         >:: test_validate_ship_invalid_same_coordinates;
+         "Test create_board with different sizes"
+         >:: test_create_board_different_sizes;
        ]
 
 let _ = run_test_tt_main test_grid
