@@ -3,6 +3,8 @@ open Battleship.Grid
 
 open Battleship
 
+let () = Random.self_init ()
+
 type game_state = {
   mutable current_player : Player.t;
   mutable opponent : Player.t;
@@ -12,7 +14,7 @@ let switch_player state =
   let temp = state.current_player in
   state.current_player <- state.opponent;
   state.opponent <- temp;
-  print_endline ("It's now " ^ state.current_player.name ^ "'s turn.")
+  print_endline ("\nIt's now " ^ state.current_player.name ^ "'s turn.\n")
 
 let rec play_turn loop state () =
   print_endline "Enter the coordinates to attack (e.g., A5):";
@@ -68,7 +70,8 @@ let rec play_turn loop state () =
 
 let rec main_loop state =
   print_endline
-    "Enter 'other' to view the opponent's board, 'next' to switch player, \
+    "\n\
+     Enter 'other' to view the opponent's board, 'next' to switch player, \
      'show' to see your board, 'play' to start your turn, or 'exit' to quit:";
   match read_line () with
   | "other" ->
@@ -140,5 +143,6 @@ let () =
       "\nWelcome to Battleship! \n\n"
   in
   let game_state = enter_size () in
-  print_endline ("It's now " ^ game_state.current_player.name ^ "'s turn.");
+  ANSITerminal.print_string [ ANSITerminal.magenta ]
+    ("\nIt's now " ^ game_state.current_player.name ^ "'s turn.\n");
   main_loop game_state
