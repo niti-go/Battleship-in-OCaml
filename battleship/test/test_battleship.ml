@@ -89,6 +89,19 @@ let test_change_state _ =
   assert_equal "wo" (string_of_cell change.(1).(1));
   assert_equal "wo" (string_of_cell change.(2).(2))
 
+let test_change_state_sunk_ship _ =
+  let grid = create_board 5 in
+  change_to_ship grid 1 3 (0, 0);
+  change_to_ship grid 1 3 (1, 0);
+  change_to_ship grid 1 3 (2, 0);
+  change_state grid "A1";
+  change_state grid "A2";
+  change_state grid "A3";
+  sink_ship "A1" 1 grid;
+  assert_equal "ss" (string_of_cell grid.(0).(0));
+  assert_equal "ss" (string_of_cell grid.(1).(0));
+  assert_equal "ss" (string_of_cell grid.(2).(0))
+
 let test_change_to_ship _ =
   let test_ships = create_board 5 in
   let () = change_to_ship test_ships 1 4 (0, 0) in
@@ -371,6 +384,7 @@ let test_grid =
          >:: test_allowed_turn_diff_board;
          "Test set_ships with random input" >:: test_set_ships_random;
          "Test set_ships with invalid input" >:: test_set_ships_invalid_input;
+         "Test change_state with sunk ship" >:: test_change_state_sunk_ship;
          "Test change_state with hit ship" >:: test_change_state_hit_ship;
          "Test change_state with miss" >:: test_change_state_miss;
          "Test validate_ship with valid horizontal ship"
