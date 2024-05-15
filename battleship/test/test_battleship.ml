@@ -1,5 +1,6 @@
 open OUnit2
 open Battleship.Grid
+open Battleship
 
 let test_string_of_cell _ =
   assert_equal "wo" (string_of_cell Water);
@@ -26,9 +27,9 @@ let test_create_board _ =
   assert_equal (Array.make_matrix 26 26 Water) (create_board 26)
 
 let test_get_ships _ =
-  assert_equal [ 4; 3; 3; 2 ] (get_ships 5);
-  assert_equal [ 4; 3; 3; 2 ] (get_ships 7);
-  assert_equal [ 4; 3; 3; 2 ] (get_ships 9);
+  assert_equal [ 4; 3; 2 ] (get_ships 5);
+  assert_equal [ 4; 3; 2 ] (get_ships 7);
+  assert_equal [ 4; 3; 2 ] (get_ships 9);
   assert_equal [ 4; 4; 3; 3; 2; 2 ] (get_ships 10);
   assert_equal [ 4; 4; 3; 3; 2; 2 ] (get_ships 11);
   assert_equal [ 4; 4; 3; 3; 2; 2 ] (get_ships 14);
@@ -177,6 +178,21 @@ let test_invalid_board_size _ =
     assert_failure "Expected Invalid_argument exception"
   with Invalid_argument _ -> ()
 
+let test_allowed_turn _ =
+  let test_good_player = Player.create_player "test" (create_board 5) in
+  let test_bad_player = Player.create_player "test2" (create_board 5) in
+  let () = test_bad_player.missed_turns <- 9 in
+  assert_equal true (Player.allowed_turn test_good_player);
+  assert_equal false (Player.allowed_turn test_bad_player)
+
+let test_allowed_turn_diff_board _ =
+  let test_good_player = Player.create_player "test" (create_board 10) in
+  let test_bad_player = Player.create_player "test2" (create_board 10) in
+  let () = test_good_player.missed_turns <- 17 in
+  let () = test_bad_player.missed_turns <- 18 in
+  assert_equal true (Player.allowed_turn test_good_player);
+  assert_equal false (Player.allowed_turn test_bad_player)
+
 let test_grid =
   "tests functionality of grid module"
   >::: [
@@ -198,6 +214,12 @@ let test_grid =
          "Test creating a board with invalid size" >:: test_invalid_board_size;
          "Test validate_ship with coordinates off the grid"
          >:: test_validate_ship_off_grid;
+         (* can someone make a diff test grid for player module? dunno how to do
+            + more lines*)
+         "Test allowed_turn with players with too many misses and not too many"
+         >:: test_allowed_turn;
+         "Test allowed_turn with different board size"
+         >:: test_allowed_turn_diff_board;
        ]
 
 let _ = run_test_tt_main test_grid

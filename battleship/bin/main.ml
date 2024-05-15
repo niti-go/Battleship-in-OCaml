@@ -14,8 +14,57 @@ let switch_player state =
   state.opponent <- temp;
   print_endline ("It's now " ^ state.current_player.name ^ "'s turn.")
 
-(*need to verify user input further - what if they put CC or 55. C0 case is
-  taken care of in validate ships*)
+let rec play_turn loop state () =
+  print_endline "Enter the coordinates to attack (e.g., A5):";
+  let coord = read_line () in
+  try
+    let row, col = coordinates coord in
+    if
+      row < 0
+      || row >= Array.length state.opponent.board
+      || col < 0
+      || col >= Array.length state.opponent.board.(0)
+    then (
+      print_endline "Invalid coordinates. Please try again.";
+      play_turn loop state ())
+    else
+      let cell = state.opponent.board.(row).(col) in
+      match cell with
+      | Water ->
+          change_state state.opponent.board coord;
+          print_endline "\nMISS!\n";
+          state.current_player.missed_turns <-
+            state.current_player.missed_turns + 1;
+          print_their_board state.opponent.board;
+          switch_player state;
+          loop state
+      | Ship { id; _ } ->
+          change_state state.opponent.board coord;
+          print_endline "\nHIT!\n";
+          if is_sunk coord id state.opponent.board then (
+            print_endline "\nYou sunk a ship!\n";
+            state.current_player.num_ships_sunk <-
+              state.current_player.num_ships_sunk + 1;
+            sink_ship coord id state.opponent.board;
+            print_their_board state.opponent.board;
+            if
+              state.current_player.num_ships_sunk
+              = List.length (get_ships (Array.length state.opponent.board))
+            then (
+              print_endline
+                ("\nCongratulations! You sank all of "
+               ^ state.current_player.name ^ "'s ships!");
+              exit 0))
+          else ();
+          print_their_board state.opponent.board;
+          switch_player state;
+          loop state
+      | _ ->
+          print_endline "You already attacked this position.";
+          play_turn loop state ()
+  with Failure _ ->
+    print_endline "Invalid coordinates. Please try again.";
+    play_turn loop state ()
 
 let rec main_loop state =
   print_endline
@@ -45,58 +94,10 @@ let rec main_loop state =
       else if state.opponent.is_ships_set = false then (
         print_endline "Waiting for the opponent to set their ships.";
         main_loop state)
-      else
-        let rec play_turn () =
-          print_endline "Enter the coordinates to attack (e.g., A5):";
-          let coord = read_line () in
-          try
-            let row, col = coordinates coord in
-            if
-              row < 0
-              || row >= Array.length state.opponent.board
-              || col < 0
-              || col >= Array.length state.opponent.board.(0)
-            then (
-              print_endline "Invalid coordinates. Please try again.";
-              play_turn ())
-            else
-              let cell = state.opponent.board.(row).(col) in
-              match cell with
-              | Water ->
-                  change_state state.opponent.board coord;
-                  print_endline "\nMISS!";
-                  print_their_board state.opponent.board;
-                  switch_player state;
-                  main_loop state
-              | Ship { id; _ } ->
-                  change_state state.opponent.board coord;
-                  print_endline "\nHIT!";
-                  if is_sunk coord id state.opponent.board then (
-                    print_endline "\nYou sunk a ship!";
-                    state.current_player.num_ships_sunk <-
-                      state.current_player.num_ships_sunk + 1;
-                    sink_ship coord id state.opponent.board;
-                    if
-                      state.current_player.num_ships_sunk
-                      = List.length
-                          (get_ships (Array.length state.opponent.board))
-                    then (
-                      print_endline
-                        ("\nCongratulations! You sank all of "
-                       ^ state.current_player.name ^ "'s ships!");
-                      exit 0))
-                  else ();
-                  print_their_board state.opponent.board;
-                  switch_player state;
-                  main_loop state
-              | _ ->
-                  print_endline "You already attacked this position.";
-                  play_turn ()
-          with Failure _ ->
-            print_endline "Invalid coordinates. Please try again.";
-            play_turn ()
-        in
-        play_turn ()
+      else if Player.allowed_turn state.current_player then
+        play_turn main_loop state ()
+      else switch_player state;
+      main_loop state
     end
   | "exit" ->
       print_endline "Exiting game.";

@@ -126,8 +126,7 @@ let coordinates (str : string) =
 let get_ships size =
   (* Example: For a 5x5 board, return a ship of size 4, two ships of size 3, and
      a ship of size 2 *)
-  if size >= 5 && size <= 9 then (* [ 4; 3; 3; 2 ] *)
-    [ 2; 2 ]
+  if size >= 5 && size <= 9 then [ 4; 3; 2 ] (* [ 2; 2 ] *)
   else if size >= 10 && size <= 14 then [ 4; 4; 3; 3; 2; 2 ]
   else if size >= 15 && size <= 18 then [ 5; 5; 4; 3; 3; 3; 2; 2 ]
   else if size >= 19 && size <= 21 then [ 7; 5; 4; 4; 3; 3; 2 ]
