@@ -1,5 +1,8 @@
 (* lib/grid.mli: Interface for the Battleship grid module *)
 
+(**[cell] is the type of a particular spot in a grid. It can take on different
+   values, such as Water, Missed, a Ship, a Hit ship, a Destroyed ship, or
+   Hidden depending on the state of the game and the context it is called in.*)
 type cell =
   | Water
   | Miss
@@ -11,19 +14,18 @@ type cell =
       id : int;
       length : int;
     }
+    (* destroyed = sunk *)
   | Destroyed of {
       id : int;
       length : int;
     }
-    (* destroyed = sunk *)
   | Hidden (*for printing the opponent's board, the cell type is "hidden"*)
 
-(** Type representing the different possible states of a cell in the game grid *)
-
-(* COMPLETED ToDo 1: create type for grid. *)
 type t = cell array array
+(** [t] is the representation type of the grid. *)
 
 val string_of_cell : cell -> string
+(** [string_of_cell c] is the string-readable version of a cell in a grid. *)
 
 val coordinates : string -> int * int
 (** [coordinates str] is the integer tuple Cartesian coordinates of a string
@@ -34,14 +36,18 @@ val coordinates : string -> int * int
    1. *)
 
 val create_board : int -> t
-(** Create a battleship grid of a given size with all cells initialized to Water *)
+(** [create_board size] creates a battleship grid of [size] by [size] with all
+    cells initialized to Water. *)
 
 val print_grid : t -> unit
-(** Print a grid to the console with color coding for different cell states *)
+(** [print_grid grid] prints a grid to the console with color coding for
+    different cell states. *)
 
 val print_their_board : t -> unit
+(** [print_their_board grid] prints specifically an opponent's grid to the
+    console with color coding for different cell states, and keeps unknown
+    information Hidden. *)
 
-(*Completed todo 2*)
 val get_ships : int -> int list
 (** [get_ships size] takes in the size of the board and determines a list of
     ships that the user must place and what lengths they should be. *)
@@ -52,39 +58,37 @@ val get_ships : int -> int list
    of bounds. *)
 
 val validate_ship : string -> string -> t -> bool * int
+(** [validate_ship coord1 coord2 grid] determines if the given coordinates can
+    create a valid ship. Must satisfy the following: 1) is not diagonal 2) does
+    not overlap a pre existing ship 3) doesn't go out of bounds If valid, also
+    determines the length of the ship that would go there. *)
 
-(* COMPLETED ToDo 4: We call this each time the user hits a ship. This checks
-   every cell in the row and column of that coordinate for other ships of that
-   ID. (row/col of coordinate). A cell will be added to a "hit list" (string
-   list of cells) if 1) it has the same ship id 2) is hit. This returns a list
-   of other ship cells of that same ID that have been hit. TAKES IN COORDINATE,
-   GRID, AND SHIP ID*)
 val hit_ships : string -> int -> t -> (int * int) list
+(** [hit_ships coord ship_id grid] checks every cell in the row and column of
+    that coordinate for other ships of that ID. (row/col of coordinate). A cell
+    will be added to a "hit list" (string list of cells) if 1) it has the same
+    ship id 2) is hit. This returns a list of other ship cells of that same ID
+    that have been hit. *)
 
-(* COMPLETED ToDo 5: Returns true if length of "hit list" is length of ship ID
-   list (number of ships of that ID), false if otherwise. This means that the
-   ship that was just hit has sunk the entire ship. ASK GC IF CONFUSED!*)
 val is_sunk : string -> int -> t -> bool
+(** [is_sunk coord ship_id grid] Returns true if length of "hit list" is length
+    of ship ID list (number of ships of that ID), false if otherwise. This means
+    that the ship that was just hit has sunk the entire ship. *)
 
-(*ToDo 6: Change the state of the cell to ship. Used when placing initial ships.
-  Also add ship id to Ship type when initializing ship. Each ship must have
-  different Id.*)
 val change_to_ship : t -> int -> int -> int * int -> unit
+(** [change_to_ship grid ship_id ship_length] changes the state of the cell to
+    ship. Used when placing initial ships. Also adds ship id to Ship type when
+    initializing ship. Each ship must have different Id.*)
 
-(* COMPLETED ToDo 7: Change the state of the cell. Example ship -> hit, water ->
-   miss.*)
 val change_state : t -> string -> unit
+(** [change_state grid state] changes the state of the cell. Example: ship ->
+    hit, water -> miss.*)
 
 val sink_ship : string -> int -> t -> unit
 (**[sink_ship coord ship_id grid] changes the state of all ship cells in [grid]
    with the same ship_id as the ship at [coord] from sx (hit) to ss (sunken
    ship). *)
 
-(* ToDo 8: Asks user to place the ships (using get_ships) and change the
-   necessary cells on the grid to "ship". (Call validate_ships to validate
-   ship.) Example: You have 4 ships to place of length 4, 3, 3, and 2. Please
-   give two coordinates in the form a1 to place your ship of length 4. DO EACH
-   LENGTH INDIVIDUALLY! after they place each ship print the grid. call
-   change_to_ship to give each ship a unique ship id. this fxn will be called
-   individually on each ship the user sets.*)
 val set_ships : int list -> t -> unit
+(** [set_ships] asks user to place the ships (using get_ships) and change the
+    necessary cells on the grid to "ship". *)
