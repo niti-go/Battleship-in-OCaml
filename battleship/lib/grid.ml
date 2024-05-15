@@ -136,15 +136,9 @@ let get_ships size =
   else [ 2; 3; 4; 5 ]
 (* Default case for larger boards *)
 
-(*Possible edge case, what if coord1 and coord2 are the same? is ship still
-  valid?*)
-(* Should always be in the form where coord1 is leftmost/topmost coordinate and
-   coord2 is rightmost/lowest coordinate*)
-let validate_ship coord1 coord2 (grid : t) =
+let validate_ship_given_index_coords ((c1x, c1y) : int * int)
+    ((c2x, c2y) : int * int) (grid : t) =
   try
-    let c1x, c1y = coordinates coord1 in
-    let c2x, c2y = coordinates coord2 in
-    (*checks if ship is out of bounds, then diagonal*)
     if
       c1x < 0
       || c1x >= Array.length grid.(0)
@@ -198,6 +192,17 @@ let validate_ship coord1 coord2 (grid : t) =
             tmp,
           abs (c2x - c1x) + 1 )
     else (false, 0)
+  with Failure _ -> (false, 0)
+
+(*Possible edge case, what if coord1 and coord2 are the same? is ship still
+  valid?*)
+(* Should always be in the form where coord1 is leftmost/topmost coordinate and
+   coord2 is rightmost/lowest coordinate*)
+let validate_ship coord1 coord2 (grid : t) =
+  try
+    let c1x, c1y = coordinates coord1 in
+    let c2x, c2y = coordinates coord2 in
+    validate_ship_given_index_coords (c1x, c1y) (c2x, c2y) grid
   with Failure _ -> (false, 0)
 
 (*TODO 4 COMPLETED *)
