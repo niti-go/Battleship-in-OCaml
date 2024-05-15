@@ -422,6 +422,67 @@ let rec set_ships_given_ids (ship_lengths : int list) (ship_ids : int list)
     let new_ship_ids = remove_first_element ship_ids in
     set_ships_given_ids new_ship_lengths new_ship_ids grid
 
+let rec set_one_random_ship (ship_length : int) (id : int) (grid : t) =
+  (*col number first, then row number*)
+  let grid_length = Array.length grid in
+  let horz_or_vert = Random.int 2 in
+  if horz_or_vert = 0 then
+    (*place a random horizontal ship*)
+    let row_index = Random.int grid_length in
+    let col_index = Random.int (grid_length - ship_length) in
+    let c1 = (col_index, row_index) in
+    let c2 = (col_index + ship_length - 1, row_index) in
+    let is_valid, users_ship_length =
+      validate_ship_given_index_coords c1 c2 grid
+    in
+    if is_valid = true && users_ship_length = ship_length then
+      for i = col_index to col_index + ship_length - 1 do
+        let () = change_to_ship grid id ship_length (i, row_index) in
+        ()
+      done
+    else set_one_random_ship ship_length id grid
+  else
+    (*place a random vertical ship*)
+    let col_index = Random.int grid_length in
+    let row_index = Random.int (grid_length - ship_length) in
+    let c1 = (col_index, row_index) in
+    let c2 = (col_index, row_index + ship_length - 1) in
+    let is_valid, users_ship_length =
+      validate_ship_given_index_coords c1 c2 grid
+    in
+    if is_valid = true && users_ship_length = ship_length then
+      for i = row_index to row_index + ship_length - 1 do
+        let () = change_to_ship grid id ship_length (col_index, i) in
+        ()
+      done
+    else set_one_random_ship ship_length id grid
+
+let rec set_random_ships_given_ids (ship_lengths : int list)
+    (ship_ids : int list) (grid : t) =
+  if List.length ship_lengths = 0 then ()
+  else
+    let first_length = List.hd ship_lengths in
+    let id = List.hd ship_ids in
+    let () = set_one_random_ship first_length id grid in
+    let new_ship_lengths = remove_first_element ship_lengths in
+    let new_ship_ids = remove_first_element ship_ids in
+    set_random_ships_given_ids new_ship_lengths new_ship_ids grid
+
+let rec ask_user_to_set_ships ship_lengths ship_ids grid =
+  print_endline
+    "\n\
+     You will now orient your ships.\n\
+     Enter 'custom' to choose your own ship orientations, or enter 'random' to \
+     randomly place your ships.";
+  let entry = read_line () in
+  if entry = "custom" then set_ships_given_ids ship_lengths ship_ids grid
+  else if entry = "random" then
+    let () = set_random_ships_given_ids ship_lengths ship_ids grid in
+    print_grid grid
+  else
+    let () = print_endline "Your input is not valid." in
+    ask_user_to_set_ships ship_lengths ship_ids grid
+
 let set_ships (ship_lengths : int list) (grid : t) =
   let ship_ids = List.mapi (fun x _ -> x) ship_lengths in
-  set_ships_given_ids ship_lengths ship_ids grid
+  ask_user_to_set_ships ship_lengths ship_ids grid
