@@ -7,17 +7,20 @@ Loading the Program
 You can load the program by entering the following into the command line: 
 
 dune build
-dune utop
+dune exec bin/main.exe
 
-This loads the program into the topline and allows you to utilize various 
-functions to handle data. The program contains the modules Battleship.Grid.
+This starts the program in your terminal and allows you and another player to interact through text input. The program contains the modules Battleship.Grid and Battleship.Player.
 
 To load the program into utop, enter the following:
 
+dune utop
 #use “bin/main.ml”;;
 
 To exit utop, enter:
 #quit;;
+
+To load the test suite run:
+dune test
 
 Entering a Size
 
