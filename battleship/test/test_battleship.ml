@@ -1,6 +1,7 @@
 open OUnit2
 open Battleship.Grid
 open Battleship
+open Unix
 
 let test_string_of_cell _ =
   assert_equal "wo" (string_of_cell Water);
@@ -9,6 +10,37 @@ let test_string_of_cell _ =
   assert_equal "sx" (string_of_cell (Hit { id = 0; length = 3 }));
   assert_equal "ss" (string_of_cell (Destroyed { id = 0; length = 3 }));
   assert_equal ". " (string_of_cell Hidden)
+
+let test_set_ships _ =
+  let grid = create_board 5 in
+  let ships = [ 4; 3; 2 ] in
+
+  (* Simulate user input *)
+  let user_input = "custom\nA1\nA4\nB1\nB3\nC1\nC2\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  set_ships ships grid;
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin;
+
+  (* Check if the ships are set correctly *)
+  assert_equal "so" (string_of_cell grid.(0).(0));
+  assert_equal "so" (string_of_cell grid.(1).(0));
+  assert_equal "so" (string_of_cell grid.(2).(0));
+  assert_equal "so" (string_of_cell grid.(3).(0));
+  assert_equal "so" (string_of_cell grid.(0).(1));
+  assert_equal "so" (string_of_cell grid.(1).(1));
+  assert_equal "so" (string_of_cell grid.(2).(1));
+  assert_equal "wo" (string_of_cell grid.(4).(4))
 
 let test_coordinates _ =
   assert_equal (0, 0) (coordinates "A1");
@@ -193,12 +225,26 @@ let test_allowed_turn_diff_board _ =
   assert_equal true (Player.allowed_turn test_good_player);
   assert_equal false (Player.allowed_turn test_bad_player)
 
+let test_sink_ship _ =
+  let grid = create_board 5 in
+  change_to_ship grid 1 3 (0, 0);
+  change_to_ship grid 1 3 (1, 0);
+  change_to_ship grid 1 3 (2, 0);
+  change_state grid "A1";
+  change_state grid "A2";
+  change_state grid "A3";
+  sink_ship "A2" 1 grid;
+  assert_equal "ss" (string_of_cell grid.(0).(0));
+  assert_equal "ss" (string_of_cell grid.(1).(0));
+  assert_equal "ss" (string_of_cell grid.(2).(0))
+
 let test_grid =
   "tests functionality of grid module"
   >::: [
          "Tests\n functionality of string_of_cell function."
          >:: test_string_of_cell;
          "Tests\n   functionality of coordinates function." >:: test_coordinates;
+         "Tests\n   functionality of set_ships function." >:: test_set_ships;
          "Tests\n   functionality of create_board function."
          >:: test_create_board;
          "Tests\n   functionality of get_ships function." >:: test_get_ships;
@@ -208,6 +254,7 @@ let test_grid =
          >:: test_change_to_ship;
          "Tests functionality of hit_ship function." >:: test_hit_ships;
          "Tests functionality of is_sunk function." >:: test_is_sunk;
+         "Tests functionality of sink_ship function." >:: test_sink_ship;
          "Tests functionality of validate_ship function." >:: test_validate_ship;
          "Test set_ships with invalid ship lengths"
          >:: test_create_board_creates_empty_grid;
