@@ -17,7 +17,7 @@
 
 (package
  (name battleship)
- (synopsis "A short synopsis")
+ (synopsis "An OCaml version of the classic game of Battleship")
  (description "A longer description")
  (depends ocaml dune)
  (tags

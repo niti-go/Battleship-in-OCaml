@@ -2,6 +2,6 @@
  (inline_tests)
  (name battleship)
  (libraries ANSITerminal)
- (modules grid)
+ (modules grid player)
  (preprocess
   (pps ppx_inline_test)))

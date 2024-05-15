@@ -30,9 +30,6 @@ val coordinates : string -> int * int
     indicating a position on the board. Requires that [str] is in the form where
     first character is "A-Z" and second character is a number. *)
 
-(* add 1 when is_sunk is true*)
-val num_ships_sunk : int ref
-
 (* more time potential fxns: low and high fxn, low outputs a and high outputs
    1. *)
 

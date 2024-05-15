@@ -70,7 +70,7 @@ let print_grid (grid : t) =
             | "wo" -> [ ANSITerminal.blue ]
             | "wx" -> [ ANSITerminal.cyan ]
             | "sx" -> [ ANSITerminal.magenta ]
-            | "sxx" -> [ ANSITerminal.red ]
+            | "ss" -> [ ANSITerminal.red ]
             | _ -> [ ANSITerminal.on_default ]
           in
           ANSITerminal.print_string color (string_of_cell cell ^ "  "))
@@ -123,12 +123,11 @@ let coordinates (str : string) =
   the second column and '2' is the second row, typical zero-based indexing in
   programming. *)
 
-let num_ships_sunk = ref 0 (* Tracks the number of sunk ships *)
-
 let get_ships size =
   (* Example: For a 5x5 board, return a ship of size 4, two ships of size 3, and
      a ship of size 2 *)
-  if size >= 5 && size <= 9 then [ 4; 3; 3; 2 ]
+  if size >= 5 && size <= 9 then (* [ 4; 3; 3; 2 ] *)
+    [ 2; 2 ]
   else if size >= 10 && size <= 14 then [ 4; 4; 3; 3; 2; 2 ]
   else if size >= 15 && size <= 18 then [ 5; 5; 4; 3; 3; 3; 2; 2 ]
   else if size >= 19 && size <= 21 then [ 7; 5; 4; 4; 3; 3; 2 ]

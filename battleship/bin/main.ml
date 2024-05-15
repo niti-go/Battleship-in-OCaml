@@ -1,19 +1,12 @@
 open Battleship.Grid
 (**@authors Niti Goyal, Ginger McCoy, Naakai McDonald, Nidhi Soma *)
 
-type player = {
-  name : string;
-  board : t;
-  mutable is_ships_set : bool;
-}
+open Battleship
 
 type game_state = {
-  mutable current_player : player;
-  mutable opponent : player;
+  mutable current_player : Player.t;
+  mutable opponent : Player.t;
 }
-
-let create_player name size =
-  { name; board = create_board size; is_ships_set = false }
 
 let switch_player state =
   let temp = state.current_player in
@@ -71,23 +64,26 @@ let rec main_loop state =
               match cell with
               | Water ->
                   change_state state.opponent.board coord;
-                  print_endline "MISS!";
+                  print_endline "\nMISS!";
                   print_their_board state.opponent.board;
                   switch_player state;
                   main_loop state
               | Ship { id; _ } ->
                   change_state state.opponent.board coord;
-                  print_endline "HIT!";
+                  print_endline "\nHIT!";
                   if is_sunk coord id state.opponent.board then (
-                    print_endline "You sunk a ship!";
-                    incr num_ships_sunk;
+                    print_endline "\nYou sunk a ship!";
+                    state.current_player.num_ships_sunk <-
+                      state.current_player.num_ships_sunk + 1;
                     sink_ship coord id state.opponent.board;
                     if
-                      !num_ships_sunk
+                      state.current_player.num_ships_sunk
                       = List.length
                           (get_ships (Array.length state.opponent.board))
                     then (
-                      print_endline "Congratulations! You won the game!";
+                      print_endline
+                        ("\nCongratulations! You sank all of "
+                       ^ state.current_player.name ^ "'s ships!");
                       exit 0))
                   else ();
                   print_their_board state.opponent.board;
@@ -116,8 +112,8 @@ let enter_player_name num =
 let init_game size =
   let name1 = enter_player_name 1 in
   let name2 = enter_player_name 2 in
-  let player1 = create_player name1 size in
-  let player2 = create_player name2 size in
+  let player1 = Battleship.Player.create_player name1 (create_board size) in
+  let player2 = Battleship.Player.create_player name2 (create_board size) in
   { current_player = player1; opponent = player2 }
 
 let rec enter_size () =
@@ -138,6 +134,10 @@ let rec enter_size () =
       exit 1
 
 let () =
+  let () =
+    ANSITerminal.print_string [ ANSITerminal.red ]
+      "\nWelcome to Battleship! \n\n"
+  in
   let game_state = enter_size () in
   print_endline ("It's now " ^ game_state.current_player.name ^ "'s turn.");
   main_loop game_state
