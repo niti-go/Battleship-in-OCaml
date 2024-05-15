@@ -6,8 +6,8 @@ let test_string_of_cell _ =
   assert_equal "wx" (string_of_cell Miss);
   assert_equal "so" (string_of_cell (Ship { id = 0; length = 3 }));
   assert_equal "sx" (string_of_cell (Hit { id = 0; length = 3 }));
-  assert_equal "sxx" (string_of_cell (Destroyed { id = 0; length = 3 }));
-  assert_equal "." (string_of_cell Hidden)
+  assert_equal "ss" (string_of_cell (Destroyed { id = 0; length = 3 }));
+  assert_equal ". " (string_of_cell Hidden)
 
 let test_coordinates _ =
   assert_equal (0, 0) (coordinates "A1");
@@ -132,11 +132,33 @@ let test_is_sunk _ =
 
 (* Test next: print_grid, print_their_board, num_ships_sunk, validate_ship,
    set_ships*)
+let test_validate_ship _ =
+  assert_equal (true, 2) (validate_ship "A1" "B1" (create_board 7))
+  (* Valid horizontal ship *);
+  assert_equal (true, 4) (validate_ship "D1" "D4" (create_board 7))
+  (* Valid vertical ship *);
+  assert_equal (false, 0) (validate_ship "A1" "A8" (create_board 5))
+  (* Invalid ship (too long) *);
+  assert_equal (false, 0) (validate_ship "A1" "A1" (create_board 7))
+  (* Invalid ship (too short) *);
+  assert_equal (false, 0) (validate_ship "A1" "B2" (create_board 7))
+  (* Invalid ship (diagonal) *);
+  let valid_ship_4 = create_board 5 in
+  let () = change_to_ship valid_ship_4 1 4 (0, 0) in
+  let () = change_to_ship valid_ship_4 1 4 (1, 0) in
+  let () = change_to_ship valid_ship_4 1 4 (2, 0) in
+  let () = change_to_ship valid_ship_4 1 4 (3, 0) in
+  assert_equal (false, 4) (validate_ship "A1" "A4" valid_ship_4)
+  (* Invalid ship (cooridnates overlap another ship) *);
+  assert_equal (false, 0) (validate_ship "A1" "A9" (create_board 7))
+(* Invalid ship (coordinates are off the grid) *)
+(* let tuple = validate_ship "A1" "A4" valid_ship_4 in Printf.printf "%b %i"
+   (fst tuple) (snd tuple) *)
 
 let test_grid =
   "tests functionality of grid module"
   >::: [
-         "Tests\n   functionality of string_of_cell function."
+         "Tests\n functionality of string_of_cell function."
          >:: test_string_of_cell;
          "Tests\n   functionality of coordinates function." >:: test_coordinates;
          "Tests\n   functionality of create_board function."
@@ -148,6 +170,7 @@ let test_grid =
          >:: test_change_to_ship;
          "Tests functionality of hit_ship function." >:: test_hit_ships;
          "Tests functionality of is_sunk function." >:: test_is_sunk;
+         "Tests functionality of validate_ship function." >:: test_validate_ship;
        ]
 
 let _ = run_test_tt_main test_grid

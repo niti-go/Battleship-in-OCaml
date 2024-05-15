@@ -156,6 +156,7 @@ let validate_ship coord1 coord2 (grid : t) =
       || c1y >= Array.length grid
       || c2y < 0
       || c2y >= Array.length grid
+      || (c1x = c2x && c1y = c2y)
       (*using dummy length*)
     then (false, 0)
     else if c1x = c2x then
