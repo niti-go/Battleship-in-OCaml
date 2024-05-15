@@ -275,6 +275,23 @@ let change_state (grid : t) (coordinate : string) =
    row then Array.mapi (fun y col_cell -> if y = col then state else col_cell)
    row_cell else row_cell) grid *)
 
+(*Changes the state of a cell, either upon a player hitting the cell, or upon
+  positioning initial ships at the beginning of the game.*)
+(*This is called by sink_ship once a player has sunk a ship, to change the state
+  of all ship cells with the same ship_id from sx (hit) to ss (sunken ship).*)
+let change_state_to_sunk (grid : t) (coordinate : int * int) =
+  let row, col = coordinate in
+  match grid.(row).(col) with
+  | Ship { id; length } -> grid.(row).(col) <- Destroyed { id; length }
+  | _ -> ()
+
+(**[sink_ship coord ship_id grid] changes the state of all ship cells in [grid]
+   with the same ship_id as the ship at [coord] from sx (hit) to ss (sunken
+   ship). *)
+let sink_ship coord ship_id grid =
+  let ship_coords = hit_ships coord ship_id grid in
+  List.iter (change_state_to_sunk grid) ship_coords
+
 (*Changes the state of a cell SPECIFICALLY TO A SHIP of ship_id [ship_id]. It
   was previously water,for positioning initial ships at the beginning of the
   game.*)

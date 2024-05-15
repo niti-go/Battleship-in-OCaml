@@ -81,6 +81,7 @@ let rec main_loop state =
                   if is_sunk coord id state.opponent.board then (
                     print_endline "You sunk a ship!";
                     incr num_ships_sunk;
+                    sink_ship coord id state.opponent.board;
                     if
                       !num_ships_sunk
                       = List.length

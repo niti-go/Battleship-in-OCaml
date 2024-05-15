@@ -78,6 +78,11 @@ val change_to_ship : t -> int -> int -> int * int -> unit
    miss.*)
 val change_state : t -> string -> unit
 
+val sink_ship : string -> int -> t -> unit
+(**[sink_ship coord ship_id grid] changes the state of all ship cells in [grid]
+   with the same ship_id as the ship at [coord] from sx (hit) to ss (sunken
+   ship). *)
+
 (* ToDo 8: Asks user to place the ships (using get_ships) and change the
    necessary cells on the grid to "ship". (Call validate_ships to validate
    ship.) Example: You have 4 ships to place of length 4, 3, 3, and 2. Please
