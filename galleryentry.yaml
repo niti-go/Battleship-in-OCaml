@@ -14,7 +14,7 @@ pm:
   name: Bryan Lee
   netid: bdl55
 # Set to false if you don't want your gallery entry to be public.
-publish: false
+publish: true
 # Pithy title
 title: "OCaml Battleship"
 # OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
@@ -27,7 +27,8 @@ desc: >
   go head-to-head with your opponent, taking turns to place your 
   ships strategically on the grid and launch attacks to sink their fleet.
   Terminal Battleship is an interactive command-line implementation of the 
-  classic game Battleship, developed using OCaml. 
+  classic game Battleship, developed using OCaml and its utop interface. 
+
   The project aims to provide an engaging and immersive gaming 
   experience entirely within the terminal environment. The game follows the 
   traditional rules of Battleship, where two players take turns placing their 

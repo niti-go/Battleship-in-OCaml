@@ -151,9 +151,27 @@ let test_validate_ship _ =
   assert_equal (false, 4) (validate_ship "A1" "A4" valid_ship_4)
   (* Invalid ship (cooridnates overlap another ship) *);
   assert_equal (false, 0) (validate_ship "A1" "A9" (create_board 7))
+
 (* Invalid ship (coordinates are off the grid) *)
 (* let tuple = validate_ship "A1" "A4" valid_ship_4 in Printf.printf "%b %i"
    (fst tuple) (snd tuple) *)
+let test_set_ships_invalid_lengths _ =
+  let grid = create_board 5 in
+  let expected_grid = create_board 5 in
+  (* Compare the expected grid with the actual grid *)
+  for i = 0 to 4 do
+    for j = 0 to 4 do
+      assert_equal
+        (string_of_cell expected_grid.(i).(j))
+        (string_of_cell grid.(i).(j))
+    done
+  done
+
+let test_invalid_board_size _ =
+  try
+    let _ = create_board 4 in
+    assert_failure "Expected Invalid_argument exception"
+  with Invalid_argument _ -> ()
 
 let test_grid =
   "tests functionality of grid module"
@@ -171,6 +189,9 @@ let test_grid =
          "Tests functionality of hit_ship function." >:: test_hit_ships;
          "Tests functionality of is_sunk function." >:: test_is_sunk;
          "Tests functionality of validate_ship function." >:: test_validate_ship;
+         "Test set_ships with invalid ship lengths"
+         >:: test_set_ships_invalid_lengths;
+         "Test creating a board with invalid size" >:: test_invalid_board_size;
        ]
 
 let _ = run_test_tt_main test_grid
