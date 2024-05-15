@@ -42,18 +42,18 @@ let rec play_turn loop state () =
           change_state state.opponent.board coord;
           print_endline "\nHIT!\n";
           if is_sunk coord id state.opponent.board then (
-            print_endline "\nYou sunk a ship!\n";
+            print_endline "You sunk a ship!\n";
             state.current_player.num_ships_sunk <-
               state.current_player.num_ships_sunk + 1;
             sink_ship coord id state.opponent.board;
-            print_their_board state.opponent.board;
             if
               state.current_player.num_ships_sunk
               = List.length (get_ships (Array.length state.opponent.board))
             then (
+              print_their_board state.opponent.board;
               print_endline
-                ("\nCongratulations! You sank all of "
-               ^ state.current_player.name ^ "'s ships!");
+                ("\nCongratulations! You sank all of " ^ state.opponent.name
+               ^ "'s ships!");
               exit 0))
           else ();
           print_their_board state.opponent.board;

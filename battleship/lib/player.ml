@@ -1,3 +1,11 @@
+let () = Random.self_init ()
+
+(* AF: Each player is represented as a record of Player.t {name, board,
+   ships_set, ships_sunk, missed turns}, with information specific to each
+   player over the course of the game. *)
+(*RI: is_ships_set must start as false when a player is initialized and
+  num_ships_sunk and missed_turns must be nonnegative. *)
+
 type t = {
   name : string;
   board : Grid.t;
@@ -28,3 +36,8 @@ let allowed_turn player =
     let () = player.missed_turns <- 0 in
     false
   else true
+
+let mini_game (player : t) : bool = true
+(*do random.int from 1 to n depending on n game ideas I have 1. guess the number
+  from 1 to 5 2. coin flip heads or tails 3. trivia about camels 4. addition and
+  multiplication problems 5. qs about ocaml if we're really down bad *)
