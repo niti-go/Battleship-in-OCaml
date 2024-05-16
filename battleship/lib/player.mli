@@ -15,3 +15,7 @@ val create_player : string -> Grid.t -> t
 val allowed_turn : t -> bool
 (**[allowed_turn player] decides if [player] is allowed to have a turn based off
    their previous miss count. *)
+
+val has_mini_game : t -> bool
+(**[has_mini_game player] returns whether or not [player] has a mini-game
+   associated with their turns.*)
