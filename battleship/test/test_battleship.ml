@@ -223,15 +223,15 @@ let test_invalid_board_size _ =
   with Invalid_argument _ -> ()
 
 let test_allowed_turn _ =
-  let test_good_player = Player.create_player "test" (create_board 5) in
-  let test_bad_player = Player.create_player "test2" (create_board 5) in
+  let test_good_player = Player.create_player "test" (create_board 5) false in
+  let test_bad_player = Player.create_player "test2" (create_board 5) false in
   let () = test_bad_player.missed_turns <- 9 in
   assert_equal true (Player.allowed_turn test_good_player);
   assert_equal false (Player.allowed_turn test_bad_player)
 
 let test_allowed_turn_diff_board _ =
-  let test_good_player = Player.create_player "test" (create_board 10) in
-  let test_bad_player = Player.create_player "test2" (create_board 10) in
+  let test_good_player = Player.create_player "test" (create_board 10) false in
+  let test_bad_player = Player.create_player "test2" (create_board 10) false in
   let () = test_good_player.missed_turns <- 17 in
   let () = test_bad_player.missed_turns <- 18 in
   assert_equal true (Player.allowed_turn test_good_player);
