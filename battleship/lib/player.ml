@@ -9,18 +9,20 @@ let () = Random.self_init ()
 type t = {
   name : string;
   board : Grid.t;
+  minigame : bool;
   mutable is_ships_set : bool;
   mutable num_ships_sunk : int;
   mutable missed_turns : int;
 }
 
-let create_player n b =
+let create_player n b g =
   {
     name = n;
     board = b;
     is_ships_set = false;
     num_ships_sunk = 0;
     missed_turns = 0;
+    minigame = g;
   }
 
 (* if time, make it so counts misses in a row to be more fair*)
@@ -53,6 +55,7 @@ let guess_num n =
         false
 
 let rec coin_flip flip_int =
+  let () = print_endline "Let's flip a coin for your turn. Heads or Tails?" in
   let input = read_line () in
   if input = "Heads" || input = "heads" then
     if flip_int = 0 then true else false
@@ -62,6 +65,7 @@ let rec coin_flip flip_int =
     let () = print_endline "Invalid guess. Try again" in
     coin_flip flip_int
 
+(*helper function for multiplication game*)
 let valid_mult_answer input num1 num2 = input = num1 * num2
 
 let multiplication_game num1 num2 : bool =
@@ -74,33 +78,39 @@ let multiplication_game num1 num2 : bool =
   match users_num with
   | None -> false
   | Some input -> if valid_mult_answer input num1 num2 then true else false
-(* let anagram_game () : bool = let words = BatList.of_enum (BatFile.lines_of
-   "lib/dictionary.txt") in let word_choice = List.nth words (Random.int
-   (List.length words)) in *)
 
-(* return whether player passes and is allowed to play or turn skipped*)
-(*TODO: In main create option for user to use have mini-games or not*)
+let anagram_game () : bool =
+  let words = BatList.of_enum (BatFile.lines_of "lib/dictionary.txt") in
+  let word_choice = List.nth words (Random.int (List.length words)) in
+  true (*TODO implement anagram_game*)
 
 (*do random.int from 1 to n depending on n game ideas I have 1. guess the number
   from 1 to 5 2. coin flip heads or tails 3. trivia about camels 4. addition and
   multiplication problems 5. qs about ocaml if we're really down bad *)
-
 let result_feedback is_pass =
   let () =
-    if is_pass then ANSITerminal.print_string [ ANSITerminal.green ] "Passed"
+    if is_pass then ANSITerminal.print_string [ ANSITerminal.green ] "Passed\n"
     else
-      ANSITerminal.print_string [ ANSITerminal.red ] "Failed. Skipping turn. "
+      ANSITerminal.print_string [ ANSITerminal.red ] "Failed. Skipping turn. \n"
   in
   is_pass
 
-let has_mini_game (player : t) : bool =
-  let num1 = Random.int 4 in
-  match num1 with
-  | 0 -> result_feedback (guess_num (Random.int 5 + 1))
-  | 1 ->
-      let () =
-        print_endline "Let's flip a coin for your turn. Heads or Tails?"
-      in
-      result_feedback (coin_flip (Random.int 2))
-  | 2 -> result_feedback (multiplication_game (Random.int 11) (Random.int 11))
-  | _ -> true
+let play_mini_game (player : t) : bool =
+  if player.minigame = false then true
+    (*if player has set their minigame option to False, then just return true*)
+  else
+    (*choose a random minigame to play, play it, and return whether user wins or
+      not*)
+    let num1 = Random.int 4 in
+    (*num1 is a number between 0 to 3 inclusive*)
+    match num1 with
+    | 0 ->
+        (*play guess__num game*) result_feedback (guess_num (Random.int 5 + 1))
+    | 1 ->
+        (*play flip coin game*)
+        result_feedback (coin_flip (Random.int 2))
+    | 2 ->
+        (*play multiplication game*)
+        result_feedback (multiplication_game (Random.int 11) (Random.int 11))
+    | 3 -> (*play anagram minigame*) result_feedback (anagram_game ())
+    | _ -> true
