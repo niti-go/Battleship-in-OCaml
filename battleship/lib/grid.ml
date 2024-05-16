@@ -486,3 +486,10 @@ let rec ask_user_to_set_ships ship_lengths ship_ids grid =
 let set_ships (ship_lengths : int list) (grid : t) =
   let ship_ids = List.mapi (fun x _ -> x) ship_lengths in
   ask_user_to_set_ships ship_lengths ship_ids grid
+
+(* let rec create_random_board grid difficulty = if difficulty = 0 then let
+   random_board = set_random_ships_given_ids (get_ships grid) in if else
+   difficulty = 1 then let random_board = set_random_ships_given_ids (get_ships
+   grid) in if else difficulty = 2 then let random_board =
+   set_random_ships_given_ids (get_ships grid) in if else difficulty = 3 let
+   random_board = set_one_random_ship 2 1 grid in random_board *)
