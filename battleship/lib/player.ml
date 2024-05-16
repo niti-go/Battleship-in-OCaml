@@ -47,7 +47,7 @@ let has_mini_game (player : t) : bool = true
   true if the player succeeds/wins*)
 let multiplication_game () : bool =
   let num1 = Random.int 11 in
-  let num2 = Random.int 12 in
+  let num2 = Random.int 11 in
   let answer = num1 * num2 in
   let () =
     print_endline
@@ -58,3 +58,6 @@ let multiplication_game () : bool =
   match users_num with
   | None -> false
   | Some input -> if input = answer then true else false
+(* let anagram_game () : bool = let words = BatList.of_enum (BatFile.lines_of
+   "lib/dictionary.txt") in let word_choice = List.nth words (Random.int
+   (List.length words)) in *)
