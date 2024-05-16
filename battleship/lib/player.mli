@@ -41,7 +41,7 @@ val anagram_helper : string -> string list -> string
 (** [anagram_helper reduced_word scrambled_list] creates a scrambled version of
     [reduced_word]. *)
 
-val three_tries : string -> int -> string
+val three_tries : string -> int -> string -> bool
 (** [three_tries] lets the user have three guesses for the anagram game. *)
 
 val anagram_game : unit -> bool
