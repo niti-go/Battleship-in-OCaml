@@ -110,9 +110,6 @@ let anagram_game () : bool =
   let () = print_endline ("Unscramble this word: " ^ scrambled_word) in
   three_tries "" 0 word_choice
 
-(*do random.int from 1 to n depending on n game ideas I have 1. guess the number
-  from 1 to 5 2. coin flip heads or tails 3. trivia about camels 4. addition and
-  multiplication problems 5. qs about ocaml if we're really down bad *)
 let result_feedback is_pass =
   let () =
     if is_pass then ANSITerminal.print_string [ ANSITerminal.green ] "Passed\n"

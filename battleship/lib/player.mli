@@ -17,9 +17,12 @@ val allowed_turn : t -> bool
 (**[allowed_turn player] decides if [player] is allowed to have a turn based off
    their previous miss count. *)
 
-val play_mini_game : t -> bool
-(**[play_mini_game player] plays a minigame, if the [player]'s minigame option
-   is set to true, and returns whether or not [player] wins the minigame.*)
+val guess_num : int -> bool
+(** [guess_num] simulates a minigame for the player to guess a number between 1
+    to 5. *)
+
+val coin_flip : int -> bool
+(** [coin_flip] simulates a minigame for the player to call a coin flip. *)
 
 val valid_mult_answer : int -> int -> int -> bool
 (** [valid_mult_answer input num1 num2] checks if the input matches the
@@ -29,3 +32,22 @@ val multiplication_game : int -> int -> bool
 (** [multiplication_game] simulates a minigame for the player to solve a
     multiplication problem involving user interaction, and returns true if the
     player succeeds/wins. *)
+
+val remove_char : string -> string -> string
+(** [remove_char letter word] removes the first instance of [letter] out of
+    [word]. *)
+
+val anagram_helper : string -> string list -> string
+(** [anagram_helper reduced_word scrambled_list] creates a scrambled version of
+    [reduced_word]. *)
+
+val three_tries : string -> int -> string
+(** [three_tries] lets the user have three guesses for the anagram game. *)
+
+val anagram_game : unit -> bool
+(** [anagram_game] simulates a minigame for the player to guess a word given the
+    scrambled version. *)
+
+val play_mini_game : t -> bool
+(**[play_mini_game player] plays a minigame, if the [player]'s minigame option
+   is set to true, and returns whether or not [player] wins the minigame.*)
