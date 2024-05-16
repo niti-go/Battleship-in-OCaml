@@ -79,10 +79,36 @@ let multiplication_game num1 num2 : bool =
   | None -> false
   | Some input -> if valid_mult_answer input num1 num2 then true else false
 
+let remove_char (letter : string) (word : string) : string =
+  let letter_index = String.index word letter.[0] in
+  String.sub word 0 letter_index
+  ^ String.sub word (letter_index + 1) (String.length word - 1 - letter_index)
+
+let rec anagram_helper (reduced_word : string) (scrambled_list : string list) :
+    string =
+  if reduced_word = "" then List.fold_left ( ^ ) "" scrambled_list
+  else
+    let picked_str =
+      String.sub reduced_word (Random.int (String.length reduced_word)) 1
+    in
+    anagram_helper
+      (remove_char picked_str reduced_word)
+      (picked_str :: scrambled_list)
+
+let rec three_tries guess count correct =
+  if guess = correct && count <= 2 then true
+  else if guess <> correct && count > 2 then false
+  else
+    let () = print_endline ("Guess " ^ string_of_int (count + 1) ^ ": ") in
+    let new_guess = read_line () in
+    three_tries new_guess (count + 1) correct
+
 let anagram_game () : bool =
   let words = BatList.of_enum (BatFile.lines_of "lib/dictionary.txt") in
   let word_choice = List.nth words (Random.int (List.length words)) in
-  true (*TODO implement anagram_game*)
+  let scrambled_word = anagram_helper word_choice [] in
+  let () = print_endline ("Unscramble this word: " ^ scrambled_word) in
+  three_tries "" 0 word_choice
 
 (*do random.int from 1 to n depending on n game ideas I have 1. guess the number
   from 1 to 5 2. coin flip heads or tails 3. trivia about camels 4. addition and

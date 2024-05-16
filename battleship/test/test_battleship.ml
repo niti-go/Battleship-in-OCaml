@@ -413,7 +413,6 @@ let n1 = QCheck2.Gen.(0 -- 10)
 let n2 = QCheck2.Gen.(0 -- 10)
 let pair_generator = QCheck2.Gen.pair n1 n2
 let ans_pair_generator = QCheck2.Gen.pair QCheck2.Gen.int pair_generator
-let valid_mult_answer input num1 num2 = input = num1 * num2
 
 let many_random_mult_tests =
   QCheck2.Test.make ~count:1000 ~name:"random multiplication tests"
