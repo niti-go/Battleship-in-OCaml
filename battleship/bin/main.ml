@@ -3,8 +3,6 @@ open Battleship.Grid
 
 open Battleship
 
-let () = Random.self_init ()
-
 type game_state = {
   mutable current_player : Player.t;
   mutable opponent : Player.t;
@@ -100,7 +98,10 @@ let rec main_loop state =
         print_endline "Waiting for the opponent to set their ships.";
         main_loop state)
       else if Player.allowed_turn state.current_player then
-        play_turn main_loop state ()
+        (*play the user's minigame, and play their turn if they win, otherwise
+          switch to the next player*)
+        let won_minigame = Player.play_mini_game state.current_player in
+        if won_minigame = true then play_turn main_loop state () else ()
       else switch_player state;
       main_loop state
     end
@@ -115,11 +116,30 @@ let enter_player_name num =
   print_endline ("Player " ^ string_of_int num ^ ", please enter your name:");
   read_line ()
 
+let rec player_has_minigame num =
+  print_endline
+    ("Player " ^ string_of_int num
+   ^ ", enter 'yes' if you want minigames to be associated with your turns, \
+      'no' if not:");
+  let input = read_line () in
+  match input with
+  | "yes" -> true
+  | "no" -> false
+  | _ ->
+      print_endline "Invalid input";
+      player_has_minigame num
+
 let init_game size =
   let name1 = enter_player_name 1 in
   let name2 = enter_player_name 2 in
-  let player1 = Battleship.Player.create_player name1 (create_board size) in
-  let player2 = Battleship.Player.create_player name2 (create_board size) in
+  let p1_has_game = player_has_minigame 1 in
+  let p2_has_game = player_has_minigame 2 in
+  let player1 =
+    Battleship.Player.create_player name1 (create_board size) p1_has_game
+  in
+  let player2 =
+    Battleship.Player.create_player name2 (create_board size) p2_has_game
+  in
   { current_player = player1; opponent = player2 }
 
 let rec enter_size () =
