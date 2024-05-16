@@ -14,7 +14,9 @@ let switch_player state =
   let temp = state.current_player in
   state.current_player <- state.opponent;
   state.opponent <- temp;
-  print_endline ("\nIt's now " ^ state.current_player.name ^ "'s turn.\n")
+  ANSITerminal.print_string [ ANSITerminal.magenta ]
+    ("\nIt's now " ^ state.current_player.name ^ "'s turn.");
+  print_endline ""
 
 let rec play_turn loop state () =
   print_endline "Enter the coordinates to attack (e.g., A5):";
