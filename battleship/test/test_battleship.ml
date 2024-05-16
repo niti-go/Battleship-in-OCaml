@@ -376,12 +376,6 @@ let test_grid =
          "Test creating a board with invalid size" >:: test_invalid_board_size;
          "Test validate_ship with coordinates off the grid"
          >:: test_validate_ship_off_grid;
-         (* can someone make a diff test grid for player module? dunno how to do
-            + more lines*)
-         "Test allowed_turn with players with too many misses and not too many"
-         >:: test_allowed_turn;
-         "Test allowed_turn with different board size"
-         >:: test_allowed_turn_diff_board;
          "Test set_ships with random input" >:: test_set_ships_random;
          "Test set_ships with invalid input" >:: test_set_ships_invalid_input;
          "Test change_state with sunk ship" >:: test_change_state_sunk_ship;
@@ -401,4 +395,31 @@ let test_grid =
          >:: test_create_board_different_sizes;
        ]
 
-let _ = run_test_tt_main test_grid
+let test_player =
+  "tests functionality of player module"
+  >::: [
+         "Test allowed_turn with players with too many misses and not too many"
+         >:: test_allowed_turn;
+         "Test allowed_turn with different board size"
+         >:: test_allowed_turn_diff_board;
+       ]
+
+(* ------ random test section for Player.multiplication_game ------ *)
+let valid_func input num1 num2 =
+  if input = num1 * num2 then Player.valid_mult_answer input num1 num2
+  else Player.valid_mult_answer input num1 num2 <> true
+
+let n1 = QCheck2.Gen.(0 -- 10)
+let n2 = QCheck2.Gen.(0 -- 10)
+let pair_generator = QCheck2.Gen.pair n1 n2
+let ans_pair_generator = QCheck2.Gen.pair QCheck2.Gen.int pair_generator
+let valid_mult_answer input num1 num2 = input = num1 * num2
+
+let many_random_mult_tests =
+  QCheck2.Test.make ~count:1000 ~name:"random multiplication tests"
+    ans_pair_generator (fun (x, y) -> valid_func x (fst y) (snd y))
+(* ----- end random test section -------*)
+
+let q_test = QCheck_runner.to_ounit2_test many_random_mult_tests
+let suite = "test suite" >::: [ test_grid; test_player; q_test ]
+let _ = run_test_tt_main suite

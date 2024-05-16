@@ -19,3 +19,12 @@ val allowed_turn : t -> bool
 val has_mini_game : t -> bool
 (**[has_mini_game player] returns whether or not [player] has a mini-game
    associated with their turns.*)
+
+val valid_mult_answer : int -> int -> int -> bool
+(** [valid_mult_answer input num1 num2] checks if the input matches the
+    multiplication result of [num1] and [num2]. *)
+
+val multiplication_game : unit -> bool
+(** [multiplication_game] simulates a minigame for the player to solve a
+    multiplication problem involving user interaction, and returns true if the
+    player succeeds/wins. *)

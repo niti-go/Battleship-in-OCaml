@@ -38,17 +38,18 @@ let allowed_turn player =
   else true
 
 (* return whether or not [player] has a mini-game associated with their turns.*)
+(* alt: return whether player wants a mini-game and passes and is allowed to
+   play or turn skipped*)
 let has_mini_game (player : t) : bool = true
 (*do random.int from 1 to n depending on n game ideas I have 1. guess the number
   from 1 to 5 2. coin flip heads or tails 3. trivia about camels 4. addition and
   multiplication problems 5. qs about ocaml if we're really down bad *)
 
-(*simulates a minigame for the player, involving user interaction, and returns
-  true if the player succeeds/wins*)
+let valid_mult_answer input num1 num2 = input = num1 * num2
+
 let multiplication_game () : bool =
   let num1 = Random.int 11 in
   let num2 = Random.int 11 in
-  let answer = num1 * num2 in
   let () =
     print_endline
       ("What is " ^ string_of_int num1 ^ " * " ^ string_of_int num2 ^ ": ")
@@ -57,7 +58,7 @@ let multiplication_game () : bool =
   let users_num = int_of_string_opt input in
   match users_num with
   | None -> false
-  | Some input -> if input = answer then true else false
+  | Some input -> if valid_mult_answer input num1 num2 then true else false
 (* let anagram_game () : bool = let words = BatList.of_enum (BatFile.lines_of
    "lib/dictionary.txt") in let word_choice = List.nth words (Random.int
    (List.length words)) in *)
