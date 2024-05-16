@@ -72,7 +72,8 @@ let rec main_loop state =
   print_endline
     "\n\
      Enter 'other' to view the opponent's board, 'next' to switch player, \
-     'show' to see your board, 'play' to start your turn, or 'exit' to quit:";
+     'show' to see your board, 'play' to start your turn, 'single' for one \
+     player gameplay, or 'exit' to quit:";
   match read_line () with
   | "other" ->
       print_their_board state.opponent.board;
@@ -105,6 +106,20 @@ let rec main_loop state =
       else switch_player state;
       main_loop state
     end
+  (* | "single" -> begin (* random_grid fxn, get_ship_ids fxn, random_guess fxn,
+     feeling crazy then play mini games???*) let computer = create_player
+     "Computer" (set_random_ships_given_ids get_ships get_ship_ids
+     play_mini_game) in if state.current_player.is_ships_set = false then (
+     state.opponent = computer; set_ships (get_ships (Array.length
+     state.current_player.board)) state.current_player.board;
+     state.current_player.is_ships_set <- true; main_loop state) else if
+     state.opponent.is_ships_set = false then ( print_endline "Placing my ships
+     now."; state.opponent.random_grid) else if Player.allowed_turn
+     state.current_player then (*play the user's minigame, and play their turn
+     if they win, otherwise switch to the next player*) let won_minigame =
+     Player.play_mini_game state.current_player in if won_minigame = true then
+     play_turn main_loop state () else () else switch_player state; main_loop
+     state end *)
   | "exit" ->
       print_endline "Exiting game.";
       exit 0

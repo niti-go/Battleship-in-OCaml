@@ -96,3 +96,5 @@ val set_ships : int list -> t -> unit
 (* val set_random_ships : int list -> t -> unit (** [set_random_ships lst grid]
    places random ships of the lengths specified in [lst] by changing the
    necessary cells on [grid] to "ship", a.k.a "so". *) *)
+
+val set_random_ships_given_ids : int list -> int list -> t -> unit

@@ -487,9 +487,20 @@ let set_ships (ship_lengths : int list) (grid : t) =
   let ship_ids = List.mapi (fun x _ -> x) ship_lengths in
   ask_user_to_set_ships ship_lengths ship_ids grid
 
-(* let rec create_random_board grid difficulty = if difficulty = 0 then let
-   random_board = set_random_ships_given_ids (get_ships grid) in if else
-   difficulty = 1 then let random_board = set_random_ships_given_ids (get_ships
-   grid) in if else difficulty = 2 then let random_board =
-   set_random_ships_given_ids (get_ships grid) in if else difficulty = 3 let
-   random_board = set_one_random_ship 2 1 grid in random_board *)
+(* let get_ship_ids grid = let hit_ships coord ship_id grid = (* change_state *)
+   let row_index, col_index = coordinates coord in let hit_coords = ref [] in
+
+   let check_if_hit cell row_index col_index = match cell with | Ship { id =
+   curr_id; length = _ } when curr_id = ship_id -> if not (List.mem (row_index,
+   col_index) !hit_coords) then hit_coords := (row_index, col_index) ::
+   !hit_coords | _ -> () in
+
+   (* Function that loops through the row of the given coordinate *) let
+   check_row grid = Array.iteri (fun col_index cell -> check_if_hit cell
+   row_index col_index) grid.(row_index) in
+
+   (* Function that loops through the column of the given coordinate *) let
+   check_col grid = Array.iteri (fun row_index row -> check_if_hit
+   row.(col_index) row_index col_index) grid in
+
+   check_row grid; check_col grid; *)
