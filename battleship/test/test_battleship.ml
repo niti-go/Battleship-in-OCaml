@@ -1,5 +1,6 @@
 open OUnit2
 open Battleship.Grid
+open Battleship.Player
 open Battleship
 
 let test_string_of_cell _ =
@@ -353,6 +354,132 @@ let test_create_board_different_sizes _ =
   assert_equal (Array.make_matrix 20 20 Water) (create_board 20);
   assert_equal (Array.make_matrix 25 25 Water) (create_board 25)
 
+let test_guess_num_correct _ =
+  (* Simulate user input *)
+  let user_input = "3\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  assert_equal true (Player.guess_num 3);
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin
+
+let test_guess_num_incorrect _ =
+  (* Simulate user input *)
+  let user_input = "2\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  assert_equal false (Player.guess_num 3);
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin
+
+let test_coin_flip_heads_correct _ =
+  (* Simulate user input *)
+  let user_input = "Heads\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  assert_equal true (Player.coin_flip 0);
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin
+
+let test_coin_flip_tails_correct _ =
+  (* Simulate user input *)
+  let user_input = "Tails\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  assert_equal true (Player.coin_flip 1);
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin
+
+let test_coin_flip_incorrect _ =
+  (* Simulate user input *)
+  let user_input = "Heads\nTails\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  assert_equal false (Player.coin_flip 1);
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin
+
+let test_multiplication_game_correct _ =
+  (* Simulate user input *)
+  let user_input = "12\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  assert_equal true (Player.multiplication_game 3 4);
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin
+
+let test_multiplication_game_incorrect _ =
+  (* Simulate user input *)
+  let user_input = "15\n" in
+  let input_pipe_r, input_pipe_w = Unix.pipe () in
+  let _ = Unix.in_channel_of_descr input_pipe_r in
+  let output_channel = Unix.out_channel_of_descr input_pipe_w in
+  output_string output_channel user_input;
+  close_out output_channel;
+  let old_stdin = Unix.dup Unix.stdin in
+  Unix.dup2 input_pipe_r Unix.stdin;
+
+  assert_equal false (Player.multiplication_game 3 4);
+
+  (* Restore the original stdin *)
+  Unix.dup2 old_stdin Unix.stdin;
+  Unix.close input_pipe_r;
+  Unix.close old_stdin
+
 let test_grid =
   "tests functionality of grid module"
   >::: [
@@ -402,6 +529,17 @@ let test_player =
          >:: test_allowed_turn;
          "Test allowed_turn with different board size"
          >:: test_allowed_turn_diff_board;
+         "Test guess_num with correct input" >:: test_guess_num_correct;
+         "Test guess_num with incorrect input" >:: test_guess_num_incorrect;
+         "Test coin_flip with correct heads input"
+         >:: test_coin_flip_heads_correct;
+         "Test coin_flip with correct tails input"
+         >:: test_coin_flip_tails_correct;
+         "Test coin_flip with incorrect input" >:: test_coin_flip_incorrect;
+         "Test multiplication_game with correct input"
+         >:: test_multiplication_game_correct;
+         "Test multiplication_game with incorrect input"
+         >:: test_multiplication_game_incorrect;
        ]
 
 (* ------ random test section for Player.multiplication_game ------ *)

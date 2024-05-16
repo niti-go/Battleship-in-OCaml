@@ -29,3 +29,6 @@ val multiplication_game : int -> int -> bool
 (** [multiplication_game] simulates a minigame for the player to solve a
     multiplication problem involving user interaction, and returns true if the
     player succeeds/wins. *)
+
+val guess_num : int -> bool
+val coin_flip : int -> bool
