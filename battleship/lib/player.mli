@@ -24,7 +24,7 @@ val valid_mult_answer : int -> int -> int -> bool
 (** [valid_mult_answer input num1 num2] checks if the input matches the
     multiplication result of [num1] and [num2]. *)
 
-val multiplication_game : unit -> bool
+val multiplication_game : int -> int -> bool
 (** [multiplication_game] simulates a minigame for the player to solve a
     multiplication problem involving user interaction, and returns true if the
     player succeeds/wins. *)

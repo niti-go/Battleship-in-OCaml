@@ -37,19 +37,34 @@ let allowed_turn player =
     false
   else true
 
-(* return whether or not [player] has a mini-game associated with their turns.*)
-(* alt: return whether player wants a mini-game and passes and is allowed to
-   play or turn skipped*)
-let has_mini_game (player : t) : bool = true
-(*do random.int from 1 to n depending on n game ideas I have 1. guess the number
-  from 1 to 5 2. coin flip heads or tails 3. trivia about camels 4. addition and
-  multiplication problems 5. qs about ocaml if we're really down bad *)
+(* for more code - let user have three attempts*)
+let guess_num n =
+  let () = print_endline "Guess a number from 1 to 5!" in
+  let input = read_line () in
+  let users_num = int_of_string_opt input in
+  match users_num with
+  | None -> false
+  | Some x ->
+      if x = n then true
+      else
+        let () =
+          print_endline ("Wrong - the number was " ^ string_of_int n ^ "")
+        in
+        false
+
+let rec coin_flip flip_int =
+  let input = read_line () in
+  if input = "Heads" || input = "heads" then
+    if flip_int = 0 then true else false
+  else if input = "Tails" || input = "tails" then
+    if flip_int = 1 then true else false
+  else
+    let () = print_endline "Invalid guess. Try again" in
+    coin_flip flip_int
 
 let valid_mult_answer input num1 num2 = input = num1 * num2
 
-let multiplication_game () : bool =
-  let num1 = Random.int 11 in
-  let num2 = Random.int 11 in
+let multiplication_game num1 num2 : bool =
   let () =
     print_endline
       ("What is " ^ string_of_int num1 ^ " * " ^ string_of_int num2 ^ ": ")
@@ -62,3 +77,30 @@ let multiplication_game () : bool =
 (* let anagram_game () : bool = let words = BatList.of_enum (BatFile.lines_of
    "lib/dictionary.txt") in let word_choice = List.nth words (Random.int
    (List.length words)) in *)
+
+(* return whether player passes and is allowed to play or turn skipped*)
+(*TODO: In main create option for user to use have mini-games or not*)
+
+(*do random.int from 1 to n depending on n game ideas I have 1. guess the number
+  from 1 to 5 2. coin flip heads or tails 3. trivia about camels 4. addition and
+  multiplication problems 5. qs about ocaml if we're really down bad *)
+
+let result_feedback is_pass =
+  let () =
+    if is_pass then ANSITerminal.print_string [ ANSITerminal.green ] "Passed"
+    else
+      ANSITerminal.print_string [ ANSITerminal.red ] "Failed. Skipping turn. "
+  in
+  is_pass
+
+let has_mini_game (player : t) : bool =
+  let num1 = Random.int 4 in
+  match num1 with
+  | 0 -> result_feedback (guess_num (Random.int 5 + 1))
+  | 1 ->
+      let () =
+        print_endline "Let's flip a coin for your turn. Heads or Tails?"
+      in
+      result_feedback (coin_flip (Random.int 2))
+  | 2 -> result_feedback (multiplication_game (Random.int 11) (Random.int 11))
+  | _ -> true
