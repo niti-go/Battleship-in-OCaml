@@ -106,20 +106,26 @@ let rec main_loop state =
       else switch_player state;
       main_loop state
     end
-  (* | "single" -> begin (* random_grid fxn, get_ship_ids fxn, random_guess fxn,
-     feeling crazy then play mini games???*) let computer = create_player
-     "Computer" (set_random_ships_given_ids get_ships get_ship_ids
-     play_mini_game) in if state.current_player.is_ships_set = false then (
-     state.opponent = computer; set_ships (get_ships (Array.length
-     state.current_player.board)) state.current_player.board;
-     state.current_player.is_ships_set <- true; main_loop state) else if
-     state.opponent.is_ships_set = false then ( print_endline "Placing my ships
-     now."; state.opponent.random_grid) else if Player.allowed_turn
-     state.current_player then (*play the user's minigame, and play their turn
-     if they win, otherwise switch to the next player*) let won_minigame =
-     Player.play_mini_game state.current_player in if won_minigame = true then
-     play_turn main_loop state () else () else switch_player state; main_loop
-     state end *)
+  | "single" -> begin
+      (* random_grid fxn, get_ship_ids fxn, random_guess fxn, feeling crazy then
+         play mini games???*)
+      if state.opponent.is_ships_set = false then (
+        switch_player state;
+        print_endline "Placing my ships now.";
+        let size = Array.length state.opponent.board in
+        let ship_ids = get_length (get_ships size) in
+        set_random_ships_given_ids (get_ships size) (num_ships ship_ids)
+          state.current_player.board;
+        state.current_player.is_ships_set <- true;
+        switch_player state;
+        main_loop state)
+      else if Player.allowed_turn state.current_player then (
+        (*play the user's minigame, and play their turn if they win, otherwise
+          switch to the next player*)
+        let won_minigame = Player.play_mini_game state.current_player in
+        if won_minigame = true then play_turn main_loop state () else ();
+        main_loop state)
+    end
   | "exit" ->
       print_endline "Exiting game.";
       exit 0

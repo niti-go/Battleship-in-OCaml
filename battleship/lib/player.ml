@@ -110,6 +110,31 @@ let anagram_game () : bool =
   let () = print_endline ("Unscramble this word: " ^ scrambled_word) in
   three_tries "" 0 word_choice
 
+let rec rock_paper_scissors () : bool =
+  print_endline "Choose a move : 'rock' , 'paper', 'scissors', 'random' ";
+  print_endline "Rock!";
+  print_endline "Paper!";
+  print_endline "Scissors!";
+  print_endline "SHOOT!";
+  match read_line () with
+  | ("rock" | "paper" | "scissors") as player_move -> (
+      let computer_choices = [ "rock"; "paper"; "scissors" ] in
+      let computer_move = List.nth computer_choices (Random.int 3) in
+      Printf.printf "You chose :  %s. I chose %s." player_move computer_move;
+      match (player_move, computer_move) with
+      | "rock", "scissors" -> true
+      | "paper", "rock" -> true
+      | "scissors", "paper" -> true
+      | "rock", "paper" -> false
+      | "paper", "scissors" -> false
+      | "scissors", "rock" -> false
+      | _ ->
+          print_endline "It's a tie!";
+          rock_paper_scissors ())
+  | _ ->
+      print_endline "Invalid move. Try again.";
+      rock_paper_scissors ()
+
 let result_feedback is_pass =
   let () =
     if is_pass then ANSITerminal.print_string [ ANSITerminal.green ] "Passed\n"

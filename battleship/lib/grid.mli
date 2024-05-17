@@ -98,3 +98,12 @@ val set_ships : int list -> t -> unit
    necessary cells on [grid] to "ship", a.k.a "so". *) *)
 
 val set_random_ships_given_ids : int list -> int list -> t -> unit
+
+val get_length : int list -> int
+(** [get_lengths size] finds the amount of ships the user must place.**)
+
+val num_ships : int -> int list
+(** [num_ships get_lengths] creates a list of the ship ids. **)
+
+val random_grid : int list -> t -> t
+(** [random_grid size grid] creates a random grid with ships placed. **)
