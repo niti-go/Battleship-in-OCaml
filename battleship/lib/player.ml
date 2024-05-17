@@ -144,8 +144,28 @@ let rec travel_game () : bool =
   match input1 with
   | "left" ->
       if num = 0 then
-        let () = print_endline "Great job! You found treasure." in
-        true
+        let () =
+          print_endline
+            "You found a river. Do you build a 'raft' or 'swim' across?"
+        in
+        let input3 = read_line () in
+        match input3 with
+        | "raft" ->
+            let () =
+              print_endline
+                "Boring. You passed from starvation while making the raft. \
+                 Womp Womp."
+            in
+            false
+        | "swim" ->
+            let () =
+              print_endline
+                "Yay! You had a party with the alligators. You pass!"
+            in
+            false
+        | _ ->
+            let () = print_endline "You have to make a decision!! Womp womp." in
+            false
       else
         let () =
           print_endline
@@ -154,8 +174,17 @@ let rec travel_game () : bool =
         in
         false
   | "right" ->
-      let () = print_endline "A right doesn't correct a wrong! Womp Womp" in
-      false
+      let num2 = Random.int 2 in
+      if num2 = 0 then
+        let () = print_endline "A right doesn't correct a wrong! Womp Womp" in
+        false
+      else
+        let () =
+          print_endline
+            "Great luck! there was a rainbow at the end of the road, and you \
+             found a pot of gold at the end!"
+        in
+        true
   | _ ->
       print_endline "Invalid decision. Try again.";
       travel_game ()

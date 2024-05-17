@@ -51,3 +51,11 @@ val anagram_game : unit -> bool
 val play_mini_game : t -> bool
 (**[play_mini_game player] plays a minigame, if the [player]'s minigame option
    is set to true, and returns whether or not [player] wins the minigame.*)
+
+val rock_paper_scissors : unit -> bool
+(** [rock_paper_scissors] simulates a minigame for the player to play rock paper
+    scissors. *)
+
+val travel_game : unit -> bool
+(** [rock_paper_scissors] simulates a minigame for the player to play rock paper
+    scissors. *)
