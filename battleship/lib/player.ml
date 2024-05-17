@@ -135,6 +135,31 @@ let rec rock_paper_scissors () : bool =
       print_endline "Invalid move. Try again.";
       rock_paper_scissors ()
 
+let rec travel_game () : bool =
+  print_endline "You enter a jungle.";
+  print_endline "There is a fork in the road!";
+  print_endline "Do you go 'left' or 'right'?";
+  let num = Random.int 2 in
+  let input1 = read_line () in
+  match input1 with
+  | "left" ->
+      if num = 0 then
+        let () = print_endline "Great job! You found treasure." in
+        true
+      else
+        let () =
+          print_endline
+            "You took the left road, but reached some quicksand. There's no \
+             way to get across. Womp Womp."
+        in
+        false
+  | "right" ->
+      let () = print_endline "A right doesn't correct a wrong! Womp Womp" in
+      false
+  | _ ->
+      print_endline "Invalid decision. Try again.";
+      travel_game ()
+
 let result_feedback is_pass =
   let () =
     if is_pass then ANSITerminal.print_string [ ANSITerminal.green ] "Passed\n"
@@ -149,7 +174,7 @@ let play_mini_game (player : t) : bool =
   else
     (*choose a random minigame to play, play it, and return whether user wins or
       not*)
-    let num1 = Random.int 4 in
+    let num1 = Random.int 6 in
     (*num1 is a number between 0 to 3 inclusive*)
     match num1 with
     | 0 ->
@@ -161,4 +186,6 @@ let play_mini_game (player : t) : bool =
         (*play multiplication game*)
         result_feedback (multiplication_game (Random.int 11) (Random.int 11))
     | 3 -> (*play anagram minigame*) result_feedback (anagram_game ())
+    | 4 -> result_feedback (rock_paper_scissors ())
+    | 5 -> result_feedback (travel_game ())
     | _ -> true
