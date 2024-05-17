@@ -134,7 +134,9 @@ let rec main_loop state =
       main_loop state
 
 let enter_player_name num =
-  print_endline ("Player " ^ string_of_int num ^ ", please enter your name:");
+  print_endline
+    ("Player " ^ string_of_int num
+   ^ ", please enter your name (enter 'none' for single player):");
   read_line ()
 
 let rec player_has_minigame num =

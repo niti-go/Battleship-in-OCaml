@@ -354,6 +354,52 @@ let test_create_board_different_sizes _ =
   assert_equal (Array.make_matrix 20 20 Water) (create_board 20);
   assert_equal (Array.make_matrix 25 25 Water) (create_board 25)
 
+let test_get_length _ =
+  assert_equal 3 (get_length (get_ships 5));
+  assert_equal 3 (get_length (get_ships 7));
+  assert_equal 3 (get_length (get_ships 9));
+  assert_equal 6 (get_length (get_ships 10));
+  assert_equal 6 (get_length (get_ships 11));
+  assert_equal 6 (get_length (get_ships 14));
+  assert_equal 8 (get_length (get_ships 15));
+  assert_equal 8 (get_length (get_ships 18));
+  assert_equal 7 (get_length (get_ships 19));
+  assert_equal 7 (get_length (get_ships 21));
+  assert_equal 11 (get_length (get_ships 22));
+  assert_equal 11 (get_length (get_ships 24));
+  assert_equal 13 (get_length (get_ships 25));
+  assert_equal 13 (get_length (get_ships 26));
+  assert_equal 4 (get_length (get_ships 4));
+  assert_equal 4 (get_length (get_ships 28))
+
+let test_num_ships _ =
+  assert_equal [ 1; 2; 3 ] (num_ships (get_length (get_ships 5)));
+  assert_equal [ 1; 2; 3 ] (num_ships (get_length (get_ships 7)));
+  assert_equal [ 1; 2; 3 ] (num_ships (get_length (get_ships 9)));
+  assert_equal [ 1; 2; 3; 4; 5; 6 ] (num_ships (get_length (get_ships 10)));
+  assert_equal [ 1; 2; 3; 4; 5; 6 ] (num_ships (get_length (get_ships 11)));
+  assert_equal [ 1; 2; 3; 4; 5; 6 ] (num_ships (get_length (get_ships 14)));
+  assert_equal [ 1; 2; 3; 4; 5; 6; 7; 8 ]
+    (num_ships (get_length (get_ships 15)));
+  assert_equal [ 1; 2; 3; 4; 5; 6; 7; 8 ]
+    (num_ships (get_length (get_ships 18)));
+  assert_equal [ 1; 2; 3; 4; 5; 6; 7 ] (num_ships (get_length (get_ships 19)));
+  assert_equal [ 1; 2; 3; 4; 5; 6; 7 ] (num_ships (get_length (get_ships 21)));
+  assert_equal
+    [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11 ]
+    (num_ships (get_length (get_ships 22)));
+  assert_equal
+    [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11 ]
+    (num_ships (get_length (get_ships 24)));
+  assert_equal
+    [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13 ]
+    (num_ships (get_length (get_ships 25)));
+  assert_equal
+    [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10; 11; 12; 13 ]
+    (num_ships (get_length (get_ships 26)));
+  assert_equal [ 1; 2; 3; 4 ] (num_ships (get_length (get_ships 4)));
+  assert_equal [ 1; 2; 3; 4 ] (num_ships (get_length (get_ships 28)))
+
 let test_guess_num_correct _ =
   (* Simulate user input *)
   let user_input = "3\n" in
@@ -520,6 +566,8 @@ let test_grid =
          >:: test_validate_ship_invalid_same_coordinates;
          "Test create_board with different sizes"
          >:: test_create_board_different_sizes;
+         "Testing get_length with different sizes if grids" >:: test_get_length;
+         "Testing num_ship with different sizes of grids" >:: test_num_ships;
        ]
 
 let test_player =
