@@ -1,10 +1,4 @@
 # Battleship: CS 3110 Final Project
-## Contributors
-- Niti Goyal ng459
-- Nidhi Soma ns848
-- Naakai McDonald nm563
-- Ginger McCoy gmm225
-
 
 ## Description
   The game builds upon the traditional rules of Battleship, where two players position their 
@@ -16,8 +10,10 @@
   unit testing, and version control.
 
 ## Usage
-In the command line, navigate to the battleship folder
-`cd battleship`
-Build the project and run the main file.
-`dune build`
-`dune exec bin/main.exe`
+  Read `Install.txt` for installation instructions.
+
+## Contributors
+- Niti Goyal ng459
+- Nidhi Soma ns848
+- Naakai McDonald nm563
+- Ginger McCoy gmm225
