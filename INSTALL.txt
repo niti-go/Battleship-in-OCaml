@@ -1,4 +1,4 @@
-User Manual: Battleship
+Battleship Installation Instructions
 
 To run our program, OCaml must be installed. You can follow the instructions to install OCaml at:
 https://cs3110.github.io/textbook/chapters/preface/install.html
