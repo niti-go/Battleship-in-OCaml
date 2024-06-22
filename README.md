@@ -1,5 +1,5 @@
-# Battleship
-## CS 3110 Final Project
+# Battleship: CS 3110 Final Project
+## Contributors
 - Niti Goyal ng459
 - Nidhi Soma ns848
 - Naakai McDonald nm563
