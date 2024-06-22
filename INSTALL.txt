@@ -1,28 +1,9 @@
 User Manual: Battleship
 
-Usage Through Utop
+To run our program, OCaml must be installed. You can follow the instructions to install OCaml at:
+https://cs3110.github.io/textbook/chapters/preface/install.html
 
-Loading the Program
-
-You can load the program by entering the following into the command line: 
-
+In the command line, navigate to the battleship folder, build the project, and run the file using the following commands:
+cd battleship
 dune build
 dune exec bin/main.exe
-
-This starts the program in your terminal and allows you and another player to interact through text input. The program contains the modules Battleship.Grid and Battleship.Player.
-
-To load the program into utop, enter the following:
-
-dune utop
-#use “bin/main.ml”;;
-
-To exit utop, enter:
-#quit;;
-
-To load the test suite run:
-dune test
-
-Entering a Size
-
-Once the program is loaded, you will be prompted to enter the dimensions of the 
-board you wish to play with. Enter an integer between 5 and 26 and hit enter. 
