@@ -10,7 +10,7 @@
   unit testing, and version control.
 
 ## Usage
-  Read `Install.txt` for installation instructions.
+  Read `Install.txt` for instructions to install and play the game.
 
 ## Contributors
 - Niti Goyal ng459
