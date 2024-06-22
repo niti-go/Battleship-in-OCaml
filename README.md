@@ -17,7 +17,7 @@
 
 ## Usage
 In the command line, navigate to the battleship folder
-cd battleship
+`cd battleship`
 Build the project and run the main file.
-dune build
-dune exec bin/main.exe
+`dune build`
+`dune exec bin/main.exe`
