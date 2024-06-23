@@ -6,7 +6,7 @@
   ships in attempt to sink their fleet. Players must also win various minigames in order for their
   turns to be effective.
 
-  In addition to utilizing functional programming, this project provided experience in momdular programming, 
+  In addition to utilizing functional programming, this project provided experience in modular programming, 
   unit testing, and version control.
 
 ## Usage
